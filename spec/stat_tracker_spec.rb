@@ -78,7 +78,9 @@ RSpec.describe StatTracker do
     end
 
     it 'highest_total_score method, sum of winning and losing team scores' do 
+      
       expect(@stat_tracker.highest_total_score).to eq 5
+   
     end
 
     it 'lowest_total_score, lowest sum of winning and losing teams scores' do 
@@ -87,7 +89,8 @@ RSpec.describe StatTracker do
     end
 
     it 'lowest_scoring_visitor, name of team with lowest avg score per game' do 
-      expect(@stat_tracker.lowest_scoring_visitor).to eq()
+      # require 'pry'; binding.pry
+      expect(@stat_tracker.lowest_scoring_visitor).to eq("Sporting Kansas City")
     end
 
   end 
