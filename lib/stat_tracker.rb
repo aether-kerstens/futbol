@@ -27,7 +27,6 @@ class StatTracker
 
 
   def lowest_scoring_visitor
-
     min_away_score = @games_data["away_goals"].min
     low_score_away_row = games_data.find {|row| row if row["away_goals"] == min_away_score}
     low_visitor_row = @teams_data.find {|row| row if row["team_id"] ==low_score_away_row["away_team_id"]}
