@@ -43,7 +43,7 @@ class StatTracker
   end
 
   def lowest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| p value if key == low_ave_score_team[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0] 
   end
 
   #iterate over hash and go into each 'average' hash and find the lowest value. then look at teams for the name
