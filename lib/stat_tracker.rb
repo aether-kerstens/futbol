@@ -46,20 +46,22 @@ class StatTracker
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0] 
   end
 
-  # def low_ave_score_home
-  #   @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-  #     {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
-  #   end 
-  # end
 
-  # def low_ave_score_home
-  #   low_ave_score_away.min_by{|hash| hash.values}.keys
-  # end
 
-  # def lowest_scoring_home_team
-  #   team_id_to_name.find {|pairs| pairs.find {|key, value| value if key == low_ave_score_home[0]}}.values[0] 
+  def low_ave_score_home
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
+    end 
+  end
 
-  # end
+  def low_ave_score_hometeam
+    low_ave_score_home.min_by{|hash| hash.values}.keys
+  end
+
+  def lowest_scoring_home_team
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
+
+  end
 
 
 
