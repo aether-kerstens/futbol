@@ -53,6 +53,14 @@ class StatTracker
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
   end
 
+  def get_team_ids
+    @teams_data.map {|row| row["team_id"].to_i}
+  end
+
+  def get_team(id)
+    @teams_data.reject {|row| row["team_id"].to_i != id}.map {|row| row["teamName"]}[0]
+  end
+
   def total_games
     @games_data.count
   end
@@ -97,12 +105,12 @@ class StatTracker
 
   def data_by_season(season_id)
     games = games_by_season(season_id)
-    @game_teams_data.each_with_object([]) do |row, array| 
+    @game_teams_data.each_with_object([]) do |row, array|
       array << row if games.include?(row["game_id"])
     end
   end
 
-  def wins_by_coach(season_id) 
+  def wins_by_coach(season_id)
     data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
       row["result"] == "WIN" ? hash[row["head_coach"]] += 1 : hash[row["head_coach"]] += 0
     end
