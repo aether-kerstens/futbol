@@ -26,12 +26,23 @@ class StatTracker
   # end
 
 
-  def lowest_scoring_visitor
-    min_away_score = @games_data["away_goals"].min
-    low_score_away_row = games_data.find {|row| row if row["away_goals"] == min_away_score}
-    low_visitor_row = @teams_data.find {|row| row if row["team_id"] ==low_score_away_row["away_team_id"]}
-    low_visitor_row["teamName"]
+  # def lowest_scoring_visitor
+  #   # min_away_score = @games_data["away_goals"].min
+  #   min_away_score = @games_data["away_goals"].min 
+  #   low_score_away_row = games_data.find {|row| row if row["away_goals"] == min_away_score}
+  #   low_visitor_row = @teams_data.find {|row| row if row["team_id"] ==low_score_away_row["away_team_id"]}
+  #   low_visitor_row["teamName"]
+  # end
+
+  def low_ave_score_away
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      [tid, {average: scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}] 
+    end.to_h 
   end
+
+
+
+
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
