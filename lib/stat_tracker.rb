@@ -25,8 +25,35 @@ class StatTracker
   #   end
   # end
 
+
+  def low_ave_score_away
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
+    end 
+  end
+
+  def low_ave_score_team
+    low_ave_score_away.min_by{|hash| hash.values}.keys
+  end
+
+  def team_id_to_name
+    @teams_data.map do |row|
+      {row["team_id"] => row["teamName"]}
+    end
+  end
+
+  def lowest_scoring_visitor
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0] 
+  end
+
+  #iterate over hash and go into each 'average' hash and find the lowest value. then look at teams for the name
+  #when refactoring- look into memoization, can use fixture files on own test 
+
+
+
+
   def highest_total_score
-    @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.max
+    @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
   end
 
   def lowest_total_score
