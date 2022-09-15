@@ -89,7 +89,7 @@ RSpec.describe StatTracker do
     end
 
     it 'lowest_scoring_visitor, name of team with lowest avg score per game' do 
-      require 'pry'; binding.pry
+      # require 'pry'; binding.pry
       expect(@stat_tracker.lowest_scoring_visitor).to eq("Sporting Kansas City")
     end
 

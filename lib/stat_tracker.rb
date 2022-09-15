@@ -26,20 +26,28 @@ class StatTracker
   # end
 
 
-  # def lowest_scoring_visitor
-  #   # min_away_score = @games_data["away_goals"].min
-  #   min_away_score = @games_data["away_goals"].min 
-  #   low_score_away_row = games_data.find {|row| row if row["away_goals"] == min_away_score}
-  #   low_visitor_row = @teams_data.find {|row| row if row["team_id"] ==low_score_away_row["away_team_id"]}
-  #   low_visitor_row["teamName"]
-  # end
-
   def low_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      [tid, {average: scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}] 
-    end.to_h 
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
+    end 
   end
 
+  def low_ave_score_team
+    low_ave_score_away.min_by{|hash| hash.values}.keys
+  end
+
+  def team_id_to_name
+    @teams_data.map do |row|
+      {row["team_id"] => row["teamName"]}
+    end
+  end
+
+  def lowest_scoring_visitor
+    team_id_to_name.find {|pairs| pairs.find {|key, value| p value if key == low_ave_score_team[0]}}.values[0] 
+  end
+
+  #iterate over hash and go into each 'average' hash and find the lowest value. then look at teams for the name
+  #when refactoring- look into memoization, can use fixture files on own test 
 
 
 
