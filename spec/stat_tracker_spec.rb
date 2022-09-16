@@ -170,6 +170,11 @@ RSpec.describe StatTracker do
       end
     end 
 
+    describe 'average goal methods'do
+      it 'has a average_goals_per_game method which returns a float rounded to nearest 100th' do
+        expect(@stat_tracker.average_goals_per_game).to eq 3.78
+     end
+     
     describe '#winningest_coach' do 
       it 'has winningest_coach which returns the name of winningest coach as a string' do
         expect(@stat_tracker.winningest_coach('20122013')).to eq 'Claude Julien'
@@ -252,15 +257,17 @@ RSpec.describe StatTracker do
       #test goes here
     end
 
-    describe 'most goals scored'do
-      xit 'has most_goals_scored method for highest number of goals for a particular team in a single game' do 
-        # require 'pry'; binding.pry
-        expect(@stat_tracker.most_goals_scored('6')).to eq(4)
+    describe '#most goals scored'do
+      it 'has most_goals_scored method for highest number of goals for a particular team in a single game' do 
+        expect(@stat_tracker.most_goals_scored("6")).to eq(4)
       end
     end
 
-    describe 'fewest_goals_scored' do
-      #test goes here
+    describe '#fewest_goals_scored' do
+      it 'has fewest_goals_scored method for lowest number of goals for a particular team in a single game' do 
+        # require 'pry'; binding.pry
+        expect(@stat_tracker.fewest_goals_scored("6")).to eq(1)
+      end
     end
 
     describe 'rival and favorite opponent helper methods' do 
