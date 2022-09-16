@@ -214,4 +214,23 @@ RSpec.describe StatTracker do
       expect(@stat_tracker.worst_season("3")).to eq "20122013"
     end
   end
+
+  describe '#count_of_games_by_season'do
+    before(:each) do
+      dummy_game_path = './data/dummy_games.csv'
+      team_path = './data/teams.csv'
+      game_teams_path = './data/game_teams.csv'
+      locations = {
+        games: dummy_game_path,
+        teams: team_path,
+        game_teams: game_teams_path
+      }
+
+      @stat_tracker = StatTracker.from_csv(locations)
+    end
+    it "counts games per season" do
+      expect(@stat_tracker.count_of_games_by_season).to eq({"20122013" => 9})
+
+    end
+  end
 end
