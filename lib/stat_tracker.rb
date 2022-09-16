@@ -212,7 +212,10 @@ class StatTracker
   end
 
   def count_of_teams
-
+    @teams_data.map { |row| row["teamName"] }.uniq.count
+    # teams_total = Hash.new(0)
+    # @teams_data.map do |row|
+    #   teams_total[row["teamName"].length]
   end
 
   def best_offense
