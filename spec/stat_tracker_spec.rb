@@ -98,6 +98,16 @@ RSpec.describe StatTracker do
 
     end
 
+    it 'gives team_info in a hash with input of team_id' do 
+      # require 'pry'; binding.pry
+      expect(@stat_tracker.team_info("1")).to eq({
+        team_id: "1", 
+        franchise_id: "23", 
+        team_name: "Atlanta United", 
+        abbreviation: "ATL", 
+        link: "/api/v1/teams/1"})
+    end
+
   end
 
   describe 'average goal methods'do

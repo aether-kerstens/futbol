@@ -67,6 +67,19 @@ class StatTracker
 
 
 
+  def team_info(team_id)
+    # team_hash = @teams_data.group_by {|row| row}.map {|key, value| Hash[key]}
+    # team_hash.map {|team| team["team_id"] == team_id}
+    teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
+    teams_hash.delete("Stadium")
+    teams_hash
+  end
+  #a hash w/ key value pairs for team_id, franchis_id, team_name, abbreviation, and link (hash)
+
+
+
+
+
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
