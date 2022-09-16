@@ -28,8 +28,8 @@ class StatTracker
 
   def low_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
-    end 
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
+    end
   end
 
   def low_ave_score_team
@@ -43,13 +43,13 @@ class StatTracker
   end
 
   def lowest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0]
   end
 
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
-    end 
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
+    end
   end
 
   def low_ave_score_hometeam
@@ -141,12 +141,12 @@ class StatTracker
 
   def data_by_season(season_id)
     games = games_by_season(season_id)
-    @game_teams_data.each_with_object([]) do |row, array| 
+    @game_teams_data.each_with_object([]) do |row, array|
       array << row if games.include?(row["game_id"])
     end
   end
 
-  def wins_by_coach(season_id) 
+  def wins_by_coach(season_id)
     data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
       row["result"] == "WIN" ? hash[row["head_coach"]] += 1 : hash[row["head_coach"]] += 0
     end
@@ -173,9 +173,9 @@ class StatTracker
     data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
       if row["result"] == "WIN"
         hash[row["team_id"]] += 1
-      else 
+      else
         hash[row["team_id"]] += 0
-      end 
+      end
     end
   end
 
@@ -187,7 +187,7 @@ class StatTracker
 
   def team_percentage_wins_by_season(team_id, season_id)
     (win_totals_by_season(season_id)[team_id] / total_games_played_by_season(season_id)[team_id].to_f).round(3)
-  end 
+  end
 
   def team_percentage_wins_all_seasons(team_id)
     season_ids.each_with_object({}) do |season_id, hash|
@@ -204,6 +204,27 @@ class StatTracker
     hash = team_percentage_wins_all_seasons(team_id)
     hash.key(hash.values.min)
   end
+
+  def count_of_games_by_season
+    games_by_season = Hash.new(0)
+    @games_data.each do |row|
+      games_by_season[row["season"]] = games_by_season[row["season"]] + 1
+    end
+    games_by_season
+  end
+
+  def count_of_teams
+    @teams_data.map { |row| row["teamName"] }.uniq.count
+    # teams_total = Hash.new(0)
+    # @teams_data.map do |row|
+    #   teams_total[row["teamName"].length]
+  end
+
+  def best_offense
+
+  end
+
+  def worst_offense
 
 #Start of helper methods for rival and favorite opponent methods
   def game_ids_by_team(team_id)
