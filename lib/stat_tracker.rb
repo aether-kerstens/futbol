@@ -47,8 +47,6 @@ class StatTracker
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0] 
   end
 
-
-
   def highest_scoring_visitor
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0] 
   end
@@ -62,10 +60,6 @@ class StatTracker
       {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
     end 
   end
-
-
-
-
 
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
@@ -95,8 +89,6 @@ class StatTracker
     end 
   end
 
-
-
   def team_info(team_id)
 
     teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
@@ -104,12 +96,36 @@ class StatTracker
     teams_hash["franchise_id"] = teams_hash.delete("franchiseId")
     teams_hash["team_name"] = teams_hash.delete("teamName")
     teams_hash
-
   end
+
+
 
   def most_goals_scored(team_id)
-  #highest number of goals a particular team has scored in a single game
+    goals_scored = away_goals_high + home_goals_high
+    goals_scored.map {|team_scores| team_scores[team_id].to_i}.max
   end
+
+  def away_goals_high
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
+    end 
+  end 
+
+  def home_goals_high
+      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
+      end 
+  end 
+
+
+
+
+  #home goals:  
+  
+
+
+
+
 
   def fewest_goals_scored(team_id)
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|

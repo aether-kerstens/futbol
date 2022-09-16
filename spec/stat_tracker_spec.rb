@@ -132,7 +132,7 @@ RSpec.describe StatTracker do
       }
       @stat_tracker = StatTracker.from_csv(locations)
     end
-    xit 'has most_goals_scored method for highest number of goals for a particular team in a single game' do 
+    it 'has most_goals_scored method for highest number of goals for a particular team in a single game' do 
       # require 'pry'; binding.pry
       expect(@stat_tracker.most_goals_scored("6")).to eq(4)
     end
