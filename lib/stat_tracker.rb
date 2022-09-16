@@ -202,4 +202,58 @@ class StatTracker
     hash = team_percentage_wins_all_seasons(team_id)
     hash.key(hash.values.min)
   end
+
+  def game_ids_by_team(team_id)
+    @games_data.each_with_object([]) do |row, array|
+      array << row["game_id"] if row["away_team_id"] == team_id || row["home_team_id"] == team_id
+    end
+  end
+
+  def opponents_data(team_id)
+    games = game_ids_by_team(team_id)
+    @game_teams_data.each_with_object([]) do |row, array|
+      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+    end
+  end
+
+  def opponents_win_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1 if row["result"] == "WIN"
+    end
+  end
+
+  def opponents_games_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1
+    end
+  end
+
+  def opponent_win_percentage(team_id, opponent_id)
+    (opponents_win_totals(team_id)[opponent_id] / opponents_games_totals(team_id)[opponent_id].to_f).round(3)
+  end
+
+  def opponents_ids(team_id)
+    opponents_data(team_id).map { |row| row["team_id"] }.uniq
+  end
+
+  def all_opponents_win_percentages(team_id)
+    opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
+      hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
+    end
+  end
+
+  def get_team_name(team_id)
+    team = @teams_data.find { |row| row["team_id"] == team_id }
+    team["teamName"]
+  end
+
+  def favorite_opponent(team_id)
+    hash = all_opponents_win_percentages(team_id)
+    get_team_name(hash.key(hash.values.min))
+  end
+
+  def rival(team_id)
+    hash = all_opponents_win_percentages(team_id)
+    get_team_name(hash.key(hash.values.max))
+  end
 end
