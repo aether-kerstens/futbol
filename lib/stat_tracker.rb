@@ -46,8 +46,6 @@ class StatTracker
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0]
   end
 
-
-
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
@@ -59,14 +57,16 @@ class StatTracker
   end
 
   def lowest_scoring_home_team
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
-
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
   end
 
-
-
-
-
+  def team_info(team_id)
+    teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
+    teams_hash.delete("Stadium")
+    teams_hash["franchise_id"] = teams_hash.delete("franchiseId")
+    teams_hash["team_name"] = teams_hash.delete("teamName")
+    teams_hash
+  end
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
@@ -132,6 +132,7 @@ class StatTracker
     averages
   end
 
+#Start of helper methods for winningest coach and worst coach
   def games_by_season(season_id)
     @games_data.each_with_object([]) do |row, array|
       array << row["game_id"] if row["season"] == season_id
@@ -163,6 +164,7 @@ class StatTracker
     sorted_wins_by_coach(season_id)[-1][0]
   end
 
+#Start of helper methods for best season and worst season
   def season_ids
     @games_data.map { |row| row["season"] }.uniq
   end
@@ -224,5 +226,58 @@ class StatTracker
 
   def worst_offense
 
+#Start of helper methods for rival and favorite opponent methods
+  def game_ids_by_team(team_id)
+    @games_data.each_with_object([]) do |row, array|
+      array << row["game_id"] if row["away_team_id"] == team_id || row["home_team_id"] == team_id
+    end
+  end
+
+  def opponents_data(team_id)
+    games = game_ids_by_team(team_id)
+    @game_teams_data.each_with_object([]) do |row, array|
+      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+    end
+  end
+
+  def opponents_win_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1 if row["result"] == "WIN"
+    end
+  end
+
+  def opponents_games_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1
+    end
+  end
+
+  def opponent_win_percentage(team_id, opponent_id)
+    (opponents_win_totals(team_id)[opponent_id] / opponents_games_totals(team_id)[opponent_id].to_f).round(3)
+  end
+
+  def opponents_ids(team_id)
+    opponents_data(team_id).map { |row| row["team_id"] }.uniq
+  end
+
+  def all_opponents_win_percentages(team_id)
+    opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
+      hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
+    end
+  end
+
+  def get_team_name(team_id)
+    team = @teams_data.find { |row| row["team_id"] == team_id }
+    team["teamName"]
+  end
+
+  def favorite_opponent(team_id)
+    hash = all_opponents_win_percentages(team_id)
+    get_team_name(hash.key(hash.values.min))
+  end
+
+  def rival(team_id)
+    hash = all_opponents_win_percentages(team_id)
+    get_team_name(hash.key(hash.values.max))
   end
 end
