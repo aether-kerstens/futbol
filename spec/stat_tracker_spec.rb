@@ -97,6 +97,16 @@ RSpec.describe StatTracker do
       expect(@stat_tracker.lowest_scoring_home_team).to eq("Sporting Kansas City")
     end
 
+    it 'highest_scoring_visitor, name of team with highest avg score per game' do 
+      expect(@stat_tracker.highest_scoring_visitor).to eq("FC Dallas")
+    end
+
+    it 'highest_scoring_home_team, name of team with highest avg score per game' do 
+      expect(@stat_tracker.highest_scoring_home_team).to eq("FC Dallas")
+    end
+
+
+
     it 'gives team_info in a hash with input of team_id' do 
       # require 'pry'; binding.pry
       expect(@stat_tracker.team_info("1")).to eq({
@@ -108,6 +118,26 @@ RSpec.describe StatTracker do
     end
   end
 
+
+  describe 'most goals and fewest goals scored'do
+    before(:each) do
+      dummy_game_path = './data/dummy_games.csv'
+      team_path = './data/teams.csv'
+      game_teams_path = './data/game_teams.csv'
+      locations = {
+        games: dummy_game_path,
+        teams: team_path,
+        game_teams: game_teams_path
+      }
+      @stat_tracker = StatTracker.from_csv(locations)
+    end
+    xit 'has most_goals_scored method for highest number of goals for a particular team in a single game' do 
+      # require 'pry'; binding.pry
+      expect(@stat_tracker.most_goals_scored("6")).to eq(4)
+    end
+
+
+  end
   describe 'average goal methods'do
     before(:each) do
       dummy_game_path = './data/dummy_games.csv'
