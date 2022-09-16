@@ -214,4 +214,58 @@ RSpec.describe StatTracker do
       expect(@stat_tracker.worst_season("3")).to eq "20122013"
     end
   end
+
+  describe "rival and favorite opponent methods" do 
+    before(:each) do 
+      dummy_game_path = './data/dummy_games.csv'
+      dummy_team_path = './data/dummy_teams.csv'
+      dummy_game_teams_path = './data/dummy_game_teams.csv'
+      locations = {
+        games: dummy_game_path,
+        teams: dummy_team_path,
+        game_teams: dummy_game_teams_path
+      }
+      @stat_tracker = StatTracker.from_csv(locations)
+    end
+
+    it "has a game_ids_by_team method which returns an array of games played by the team" do 
+      expect(@stat_tracker.game_ids_by_team("3")).to eq ["2012030221", "2012030222", "2012030223", "2012030224", "2012030225"]
+    end
+
+    it "has an opponents_data which filters the games_teams_data by opponents of a given team" do 
+      expect(@stat_tracker.opponents_data("3")).to be_an Array
+      coaches = @stat_tracker.opponents_data("3").map { |row| row["head_coach"] }
+      expect(coaches).to eq ["Claude Julien", "Claude Julien", "Claude Julien", "Claude Julien"]
+    end
+
+    it "has opponents_win_totals which returns a hash of opponents_ids => win total" do 
+      expect(@stat_tracker.opponents_win_totals("3")).to eq({"6" => 4})
+    end
+
+    it "has opponents_games_totals which returns a hash of opponents_ids => total games" do
+      expect(@stat_tracker.opponents_games_totals("3")).to eq({"6" => 4})
+    end
+
+    it "has opponents_ids which returns an array of all oppoenents faced by given team" do 
+      expect(@stat_tracker.opponents_ids("3")).to eq ["6"]
+    end
+
+    it "has all_opponents_win_percentages which returns a hash of opponents_ids => win percentage" do 
+      expect(@stat_tracker.all_opponents_win_percentages("3")).to eq({"6"=>1.00})
+    end
+
+    it "has get_team_name which takes a team_id and returns string of team name" do 
+      expect(@stat_tracker.get_team_name("3")).to eq "Houston Dynamo"
+    end
+
+    #Again - these tests should be re-written with more robust dummy data
+    #Right now the favorite opponent and rival is the same team because there are only two teams present
+    it "has favorite_opponent which returns the opponent with the lowest win percentage for the given team" do 
+      expect(@stat_tracker.favorite_opponent("3")).to eq "FC Dallas"
+    end
+
+    it "has rival which returns the opponent with the highest win percentage for the given team" do 
+      expect(@stat_tracker.rival("3")).to eq "FC Dallas"
+    end
+  end 
 end
