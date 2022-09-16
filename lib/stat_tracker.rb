@@ -46,8 +46,6 @@ class StatTracker
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0] 
   end
 
-
-
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
@@ -60,13 +58,15 @@ class StatTracker
 
   def lowest_scoring_home_team
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
-
   end
 
-
-
-
-
+  def team_info(team_id)
+    teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
+    teams_hash.delete("Stadium")
+    teams_hash["franchise_id"] = teams_hash.delete("franchiseId")
+    teams_hash["team_name"] = teams_hash.delete("teamName")
+    teams_hash
+  end
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max

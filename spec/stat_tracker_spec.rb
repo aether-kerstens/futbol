@@ -95,9 +95,17 @@ RSpec.describe StatTracker do
 
     it 'lowest_scoring_home, name of team with lowest average score while at home' do 
       expect(@stat_tracker.lowest_scoring_home_team).to eq("Sporting Kansas City")
-
     end
 
+    it 'gives team_info in a hash with input of team_id' do 
+      # require 'pry'; binding.pry
+      expect(@stat_tracker.team_info("1")).to eq({
+        "team_id"  => "1", 
+        "franchise_id" => "23", 
+        "team_name" => "Atlanta United", 
+        "abbreviation" => "ATL", 
+        "link" => "/api/v1/teams/1"})
+    end
   end
 
   describe 'average goal methods'do
