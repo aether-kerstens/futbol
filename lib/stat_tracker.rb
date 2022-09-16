@@ -102,7 +102,7 @@ class StatTracker
 
   def most_goals_scored(team_id)
     goals_scored = away_goals_high + home_goals_high
-    goals_scored.map {|team_scores| team_scores[team_id].to_i}.max
+    goals_scored.map {|team_scores| team_scores[team_id]}.compact.max
   end
 
   def away_goals_high
@@ -116,30 +116,24 @@ class StatTracker
         {tid => scores.map {|score| score["home_goals"].to_i}.max} 
       end 
   end 
-
-
-
-
-  #home goals:  
-  
-
-
-
-
+######
 
   def fewest_goals_scored(team_id)
-    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["home_goals"].to_i}.min}
-    end 
-    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.min}
-    end 
-
-
+    goals_scored_few = away_goals_low + home_goals_low
+    goals_scored_few.map {|team_scores| team_scores[team_id]}.compact.min
   end
 
+  def away_goals_low
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
+    end 
+  end 
 
-
+  def home_goals_low
+      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
+      end 
+  end 
 
 
 
