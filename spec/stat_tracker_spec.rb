@@ -102,8 +102,8 @@ RSpec.describe StatTracker do
       # require 'pry'; binding.pry
       expect(@stat_tracker.team_info("1")).to eq({
         "team_id"  => "1", 
-        "franchiseId" => "23", 
-        "teamName" => "Atlanta United", 
+        "franchise_id" => "23", 
+        "team_name" => "Atlanta United", 
         "abbreviation" => "ATL", 
         "link" => "/api/v1/teams/1"})
     end

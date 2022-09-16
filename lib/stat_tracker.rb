@@ -72,7 +72,10 @@ class StatTracker
     # team_hash.map {|team| team["team_id"] == team_id}
     teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
     teams_hash.delete("Stadium")
+    teams_hash["franchise_id"] = teams_hash.delete("franchiseId")
+    teams_hash["team_name"] = teams_hash.delete("teamName")
     teams_hash
+
   end
   #a hash w/ key value pairs for team_id, franchis_id, team_name, abbreviation, and link (hash)
 
