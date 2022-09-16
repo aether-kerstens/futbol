@@ -25,6 +25,7 @@ class StatTracker
   #   end
   # end
 
+  
 
   def low_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
@@ -48,6 +49,24 @@ class StatTracker
 
 
 
+  def highest_scoring_visitor
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0] 
+  end
+
+  def high_ave_score_team
+    low_ave_score_away.max_by{|hash| hash.values}.keys
+  end
+
+  def high_ave_score_away
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
+    end 
+  end
+
+
+
+
+
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
@@ -60,10 +79,21 @@ class StatTracker
 
   def lowest_scoring_home_team
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
-
   end
 
+  def highest_scoring_home_team
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0] 
+  end
 
+  def high_ave_score_hometeam
+    high_ave_score_home.max_by{|hash| hash.values}.keys
+  end
+
+  def high_ave_score_home
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
+    end 
+  end
 
 
 
@@ -76,6 +106,26 @@ class StatTracker
     teams_hash
 
   end
+
+  def most_goals_scored(team_id)
+  #highest number of goals a particular team has scored in a single game
+  end
+
+  def fewest_goals_scored(team_id)
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["home_goals"].to_i}.min}
+    end 
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.min}
+    end 
+
+
+  end
+
+
+
+
+
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
