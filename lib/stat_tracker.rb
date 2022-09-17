@@ -44,7 +44,7 @@ class StatTracker
   def count_of_games_by_season
     games_by_season = Hash.new(0)
     @games_data.each do |row|
-      games_by_season[row["season"]] = games_by_season[row["season"]] + 1
+      games_by_season[row["season"]] += 1
     end
     games_by_season
   end
@@ -193,7 +193,7 @@ class StatTracker
 
   # average win percentage 
 
-  
+
   def most_goals_scored(team_id)
     goals_scored = @games.away_goals_high + @games.home_goals_high
     goals_scored.map {|team_scores| team_scores[team_id]}.compact.max
