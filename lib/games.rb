@@ -41,6 +41,22 @@ class Games
     end
   end
 
+  def low_ave_score_away
+    ave_score_away.min_by{|hash| hash.values}.keys
+  end
+
+  def high_ave_score_away
+    ave_score_away.max_by{|hash| hash.values}.keys
+  end
+
+  def low_ave_score_hometeam
+    ave_score_home.min_by{|hash| hash.values}.keys
+  end
+
+  def high_ave_score_hometeam
+    ave_score_home.max_by{|hash| hash.values}.keys
+  end
+
   def away_goals_high
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
       {tid => scores.map {|score| score["away_goals"].to_i}.max} 
@@ -71,6 +87,12 @@ class Games
 
   def total_games_by_season(season)
     @games_data.count {|row| row["season"] == season}
+  end
+
+  def games_by_season(season_id)
+    @games_data.select do |row|
+      row["season"] == season_id
+    end.map { |row| row["game_id"] }
   end
 
 

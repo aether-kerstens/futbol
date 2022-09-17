@@ -128,10 +128,6 @@ RSpec.describe StatTracker do
 
   context 'season statistics' do 
     describe 'winningest and worst coaches helper methods' do
-      it 'has games_by_season which returns an array of games_ids' do
-        expect(@stat_tracker.games_by_season('20122013')).to eq ['2012030221', '2012030222', '2012030223', '2012030224', '2012030225', '2012030311', '2012030312', '2012030313', '2012030314']
-      end
-
       it 'has data_by_season which returns an array of game_teams_data rows' do
         expect(@stat_tracker.data_by_season('20122013')).to be_an Array
         coaches = @stat_tracker.data_by_season('20122013').map { |row| row['head_coach'] }
@@ -198,10 +194,6 @@ RSpec.describe StatTracker do
     end 
 
     describe 'best and worst season helper methods' do
-      it 'has a season_ids method which returns an array of all season_ids' do
-        expect(@stat_tracker.season_ids).to eq ['20122013', '20172018']
-      end
-
       it 'has win_totals_by_season which returns a hash of team_ids => number of wins' do
         expect(@stat_tracker.win_totals_by_season('20122013')).to eq({'3'=>0, '6'=>9, '5'=>0})
       end
