@@ -1,3 +1,4 @@
+require './spec_helper.rb'
 require './lib/stat_tracker.rb'
 require 'csv'
 
@@ -79,6 +80,7 @@ RSpec.describe StatTracker do
 
     it 'highest_total_score method, sum of winning and losing team scores' do
       expect(@stat_tracker.highest_total_score).to eq 5
+
     end
 
     it 'lowest_total_score, lowest sum of winning and losing teams scores' do
@@ -87,7 +89,13 @@ RSpec.describe StatTracker do
     end
 
     it 'lowest_scoring_visitor, name of team with lowest avg score per game' do
-      expect(@stat_tracker.lowest_scoring_visitor).to eq()
+
+      expect(@stat_tracker.lowest_scoring_visitor).to eq("Sporting Kansas City")
+    end
+
+    it 'lowest_scoring_home, name of team with lowest average score while at home' do
+      expect(@stat_tracker.lowest_scoring_home_team).to eq("Sporting Kansas City")
+
     end
 
   end
@@ -109,7 +117,7 @@ RSpec.describe StatTracker do
     end
 
     it 'has average_goals_by_season method which returns a hash' do
-      expect(@stat_tracker.average_goals_by_season).to eq ({20122013 => 3.78})
+      expect(@stat_tracker.average_goals_by_season).to eq ({"20122013" => 3.78})
     end
   end
 
@@ -159,7 +167,7 @@ RSpec.describe StatTracker do
     end
   end
 
-  describe 'Tackle methods' do
+  describe "best and worst teams methods" do
     before(:each) do
       dummy_game_path = './data/dummy_games.csv'
       dummy_team_path = './data/dummy_teams.csv'
@@ -172,8 +180,59 @@ RSpec.describe StatTracker do
       @stat_tracker = StatTracker.from_csv(locations)
     end
 
-    it 'returns a string of team with most tackles by season' do
-      expect(@stat_tracker.most_tackles).to eq
+    it "has a season_ids method which returns an array of all season_ids" do
+      expect(@stat_tracker.season_ids).to eq ["20122013"]
     end
+
+    it "has win_totals_by_season which returns a hash of team_ids => number of wins" do
+      expect(@stat_tracker.win_totals_by_season("20122013")).to eq({"3"=>0, "6"=>4})
+    end
+
+    it "has total_games_played_by_season which returns a hash of team_ids => total games played" do
+      expect(@stat_tracker.total_games_played_by_season("20122013")).to eq({"3"=>5, "6"=>4})
+    end
+
+    it "has team_percentage_wins_by_season which takes a team_id and season_id and returns a percentage" do
+      expect(@stat_tracker.team_percentage_wins_by_season("3", "20122013")).to eq 0.0
+      expect(@stat_tracker.team_percentage_wins_by_season("6", "20122013")).to eq 1.0
+    end
+
+    it "has team_percentage_wins_all_seasons which takes a team_id and returns a hash of season_ids => win percentage" do
+      expect(@stat_tracker.team_percentage_wins_all_seasons("3")).to eq({"20122013"=>0.0})
+      expect(@stat_tracker.team_percentage_wins_all_seasons("6")).to eq({"20122013"=>1.0})
+    end
+
+    #these two tests need refactoring - we need better dummy files with multiple seasons
+    #didn't want to change now since we're all using the same files to write our tests
+    #but definitely should happen during iteration 3
+
+    it "has best_season which takes a team_id and returns the season_id with highest win percentage" do
+      expect(@stat_tracker.best_season("3")).to eq "20122013"
+    end
+
+    it "has best_season which takes a team_id and returns the season_id with lowestwin percentage" do
+      expect(@stat_tracker.worst_season("3")).to eq "20122013"
+    end
+  end
+
+  describe 'tackles methods' do
+    before(:each) do
+      dummy_game_path = './data/dummy_games.csv'
+      dummy_team_path = './data/dummy_teams.csv'
+      dummy_game_teams_path = './data/dummy_game_teams.csv'
+      locations = {
+        games: dummy_game_path,
+        teams: dummy_team_path,
+        game_teams: dummy_game_teams_path
+      }
+  end
+  it 'returns the name of team with most tackles by season' do
+    expect(@stat_tracker.most_tackles('20122013')).to eq 'Houston Dynamo'
+  end
+
+  it 'returns the name of team with fewest tackles by season' do
+    expect(@stat_tracker.fewest_tackles).to eq 'FC Dallas'
+  end
+
   end
 end

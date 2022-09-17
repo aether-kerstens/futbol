@@ -25,16 +25,48 @@ class StatTracker
   #   end
   # end
 
+
+  def low_ave_score_away
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
+    end
+  end
+
+  def low_ave_score_team
+    low_ave_score_away.min_by{|hash| hash.values}.keys
+  end
+
+  def team_id_to_name
+    @teams_data.map do |row|
+      {row["team_id"] => row["teamName"]}
+    end
+  end
+
+  def lowest_scoring_visitor
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0]
+  end
+
+  def low_ave_score_home
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
+    end
+  end
+
+  def low_ave_score_hometeam
+    low_ave_score_home.min_by{|hash| hash.values}.keys
+  end
+
+  def lowest_scoring_home_team
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
+
+  end
+
   def highest_total_score
-    @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.max
+    @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
   end
 
   def lowest_total_score
     @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.min
-  end
-
-  def get_seasons
-    @games_data.map {|row| row["season"].to_i}.uniq
   end
 
   def total_home_wins
@@ -54,11 +86,11 @@ class StatTracker
   end
 
   def get_team_ids
-    @teams_data.map {|row| row["team_id"].to_i}
+    @teams_data.map {|row| row["team_id"]}
   end
 
   def get_team(id)
-    @teams_data.reject {|row| row["team_id"].to_i != id}.map {|row| row["teamName"]}[0]
+    @teams_data.reject {|row| row["team_id"] != id}.map {|row| row["teamName"]}[0]
   end
 
   def total_games
@@ -66,11 +98,11 @@ class StatTracker
   end
 
   def total_goals_by_season(season)
-    @games_data.reject {|row| row["season"].to_i != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
+    @games_data.reject {|row| row["season"] != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
   end
 
   def total_games_by_season(season)
-    @games_data.count {|row| row["season"].to_i == season}
+    @games_data.count {|row| row["season"] == season}
   end
 
   def percentage_home_wins
@@ -91,7 +123,7 @@ class StatTracker
 
   def average_goals_by_season
     averages = {}
-    get_seasons.each do |season|
+    season_ids.each do |season|
       averages[season] = (total_goals_by_season(season) / total_games_by_season(season).to_f).round(2)
     end
     averages
@@ -126,5 +158,56 @@ class StatTracker
 
   def worst_coach(season_id)
     sorted_wins_by_coach(season_id)[-1][0]
+  end
+
+  def season_ids
+    @games_data.map { |row| row["season"] }.uniq
+  end
+
+  def win_totals_by_season(season_id)
+    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+      if row["result"] == "WIN"
+        hash[row["team_id"]] += 1
+      else
+        hash[row["team_id"]] += 0
+      end
+    end
+  end
+
+  def total_games_played_by_season(season_id)
+    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1
+    end
+  end
+
+  def team_percentage_wins_by_season(team_id, season_id)
+    (win_totals_by_season(season_id)[team_id] / total_games_played_by_season(season_id)[team_id].to_f).round(3)
+  end
+
+  def team_percentage_wins_all_seasons(team_id)
+    season_ids.each_with_object({}) do |season_id, hash|
+      hash[season_id] = team_percentage_wins_by_season(team_id, season_id)
+    end
+  end
+
+  def best_season(team_id)
+    hash = team_percentage_wins_all_seasons(team_id)
+    hash.key(hash.values.max)
+  end
+
+  def worst_season(team_id)
+    hash = team_percentage_wins_all_seasons(team_id)
+    hash.key(hash.values.min)
+  end
+
+  #/////Work in progress////
+  def most_tackles(season)
+    get_team_ids.map do |id|
+      games_by_season(season).reject {|row| row["team_id"] != id}.map {|row| row["tackles"].to_i}.sum
+    end
+  end
+
+  def fewest_tackles
+
   end
 end
