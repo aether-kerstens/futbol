@@ -170,11 +170,6 @@ RSpec.describe StatTracker do
       end
     end 
 
-    describe 'average goal methods'do
-      it 'has a average_goals_per_game method which returns a float rounded to nearest 100th' do
-        expect(@stat_tracker.average_goals_per_game).to eq 3.78
-     end
-     
     describe '#winningest_coach' do 
       it 'has winningest_coach which returns the name of winningest coach as a string' do
         expect(@stat_tracker.winningest_coach('20122013')).to eq 'Claude Julien'
