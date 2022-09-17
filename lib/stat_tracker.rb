@@ -1,4 +1,5 @@
 require 'csv'
+require './lib/games'
 
 class StatTracker
   attr_reader :games_data, :teams_data, :game_teams_data
@@ -7,6 +8,7 @@ class StatTracker
     @games_data = games_data
     @teams_data = teams_data
     @game_teams_data = game_teams_data
+    @games = Games.new(games_data)
   end
 
   def self.from_csv(locations)
@@ -18,7 +20,9 @@ class StatTracker
     game_teams_data = CSV.read game_teams_path, headers:true
     StatTracker.new(games_data, teams_data, game_teams_data)
   end
-
+  def games
+    games = Games.new(@games_data)
+  end
   # def test
   #   @games_data.map do|row|
   #     row["game_id"]
@@ -134,25 +138,12 @@ class StatTracker
     @games_data.map {|row| row["season"].to_i}.uniq
   end
 
-  def total_home_wins
-    @games_data.count { |row| row["home_goals"].to_i > row["away_goals"].to_i }
-  end
-
-  def total_away_wins
-    @games_data.count { |row| row["away_goals"].to_i > row["home_goals"].to_i }
-  end
-
-  def total_ties
-    @games_data.count { |row| row["away_goals"].to_i == row["home_goals"].to_i }
-  end
 
   def total_goals
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
   end
 
-  def total_games
-    @games_data.count
-  end
+
 
   def total_goals_by_season(season)
     @games_data.reject {|row| row["season"].to_i != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
@@ -163,19 +154,19 @@ class StatTracker
   end
 
   def percentage_home_wins
-    (total_home_wins / total_games.to_f).round(2)
+    (@games.total_home_wins / @games.total_games.to_f).round(2)
   end
 
   def percentage_visitor_wins
-    (total_away_wins / total_games.to_f).round(2)
+    (@games.total_away_wins / @games.total_games.to_f).round(2)
   end
 
   def percentage_ties
-    (total_ties / total_games.to_f).round(2)
+    (@games.total_ties / @games.total_games.to_f).round(2)
   end
 
   def average_goals_per_game
-    (total_goals / total_games.to_f).round(2)
+    (total_goals / @games.total_games.to_f).round(2)
   end
 
   def average_goals_by_season

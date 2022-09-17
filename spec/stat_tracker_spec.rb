@@ -50,23 +50,6 @@ RSpec.describe StatTracker do
       end
     end
 
-    describe 'percentage wins and ties helper methods' do
-      it 'has a total_home_wins which calculates total number of home wins' do
-        expect(@stat_tracker.total_home_wins).to eq 8
-      end
-
-      it 'has a total_away_wins which calculates total number of away wins' do
-        expect(@stat_tracker.total_away_wins).to eq 6
-      end
-
-      it 'has a total_ties which calculates total numeber of ties' do
-        expect(@stat_tracker.total_ties).to eq 1
-      end
-
-      it 'has a total_games which counts the total number of games' do
-        expect(@stat_tracker.total_games).to eq 15
-      end
-    end 
 
     describe '#percentage_home_wins' do
       it 'returns a float rounded to nearest 100th of percentage home wins' do
