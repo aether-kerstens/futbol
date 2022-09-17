@@ -83,7 +83,7 @@ RSpec.describe StatTracker do
 
     describe '#average_goals_by_season' do 
       it 'returns a hash of season => average goals' do
-        expect(@stat_tracker.average_goals_by_season).to eq ({20122013 => 3.78, 20172018=>4.17})
+        expect(@stat_tracker.average_goals_by_season).to eq ({"20122013" => 3.78, "20172018" =>4.17})
       end
     end
   end 

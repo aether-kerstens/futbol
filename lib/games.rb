@@ -20,6 +20,67 @@ class Games
   def total_ties
     @games_data.count { |row| row["away_goals"].to_i == row["home_goals"].to_i }
   end
+
+  def total_goals
+    @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
+  end
+
+  def get_seasons
+    @games_data.map {|row| row["season"]}.uniq
+  end
+
+  def ave_score_away
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
+    end
+  end
+
+  def ave_score_home
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
+    end
+  end
+
+  def away_goals_high
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
+    end 
+  end 
+
+  def home_goals_high
+      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
+      end 
+  end 
+
+  def away_goals_low
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
+    end 
+  end 
+
+  def home_goals_low
+      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
+      end 
+  end 
+
+  def total_goals_by_season(season)
+    @games_data.reject {|row| row["season"] != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
+  end
+
+  def total_games_by_season(season)
+    @games_data.count {|row| row["season"] == season}
+  end
+
+
+
+
+
+
+
+
+
 end
 
 

@@ -35,4 +35,10 @@ RSpec.describe Games do
       expect(@games.total_games).to eq 15
     end
   end 
+
+
+
+
+
+  
 end

@@ -31,14 +31,10 @@ class StatTracker
 
   
 
-  def ave_score_away
-    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
-    end
-  end
+
 
   def low_ave_score_away
-    ave_score_away.min_by{|hash| hash.values}.keys
+    @games.ave_score_away.min_by{|hash| hash.values}.keys
   end
 
   def team_id_to_name
@@ -56,17 +52,11 @@ class StatTracker
   end
 
   def high_ave_score_away
-    ave_score_away.max_by{|hash| hash.values}.keys
-  end
-
-  def ave_score_home
-    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
-    end
+    @games.ave_score_away.max_by{|hash| hash.values}.keys
   end
 
   def low_ave_score_hometeam
-    ave_score_home.min_by{|hash| hash.values}.keys
+    @games.ave_score_home.min_by{|hash| hash.values}.keys
   end
 
   def lowest_scoring_home_team
@@ -78,7 +68,7 @@ class StatTracker
   end
 
   def high_ave_score_hometeam
-    ave_score_home.max_by{|hash| hash.values}.keys
+    @games.ave_score_home.max_by{|hash| hash.values}.keys
   end
 
   def team_info(team_id)
@@ -92,39 +82,14 @@ class StatTracker
 
 
   def most_goals_scored(team_id)
-    goals_scored = away_goals_high + home_goals_high
+    goals_scored = @games.away_goals_high + @games.home_goals_high
     goals_scored.map {|team_scores| team_scores[team_id]}.compact.max
   end
 
-  def away_goals_high
-    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
-    end 
-  end 
-
-  def home_goals_high
-      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
-      end 
-  end 
-
-
   def fewest_goals_scored(team_id)
-    goals_scored_few = away_goals_low + home_goals_low
+    goals_scored_few = @games.away_goals_low + @games.home_goals_low
     goals_scored_few.map {|team_scores| team_scores[team_id]}.compact.min
   end
-
-  def away_goals_low
-    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
-    end 
-  end 
-
-  def home_goals_low
-      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
-      end 
-  end 
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
@@ -134,24 +99,6 @@ class StatTracker
     @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.min
   end
 
-  def get_seasons
-    @games_data.map {|row| row["season"].to_i}.uniq
-  end
-
-
-  def total_goals
-    @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
-  end
-
-
-
-  def total_goals_by_season(season)
-    @games_data.reject {|row| row["season"].to_i != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
-  end
-
-  def total_games_by_season(season)
-    @games_data.count {|row| row["season"].to_i == season}
-  end
 
   def percentage_home_wins
     (@games.total_home_wins / @games.total_games.to_f).round(2)
@@ -166,13 +113,13 @@ class StatTracker
   end
 
   def average_goals_per_game
-    (total_goals / @games.total_games.to_f).round(2)
+    (@games.total_goals / @games.total_games.to_f).round(2)
   end
 
   def average_goals_by_season
     averages = {}
-    get_seasons.each do |season|
-      averages[season] = (total_goals_by_season(season) / total_games_by_season(season).to_f).round(2)
+    @games.get_seasons.each do |season|
+      averages[season] = (@games.total_goals_by_season(season) / @games.total_games_by_season(season).to_f).round(2)
     end
     averages
   end
