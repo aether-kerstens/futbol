@@ -27,14 +27,14 @@ class StatTracker
 
   
 
-  def low_ave_score_away
+  def ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
     end
   end
 
-  def low_ave_score_team
-    low_ave_score_away.min_by{|hash| hash.values}.keys
+  def low_ave_score_away
+    ave_score_away.min_by{|hash| hash.values}.keys
   end
 
   def team_id_to_name
@@ -44,31 +44,25 @@ class StatTracker
   end
 
   def lowest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0]
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_away[0]}}.values[0]
   end
 
   def highest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0] 
-  end
-
-  def high_ave_score_team
-    low_ave_score_away.max_by{|hash| hash.values}.keys
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_away[0]}}.values[0] 
   end
 
   def high_ave_score_away
-    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
-    end 
+    ave_score_away.max_by{|hash| hash.values}.keys
   end
 
-  def low_ave_score_home
+  def ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
     end
   end
 
   def low_ave_score_hometeam
-    low_ave_score_home.min_by{|hash| hash.values}.keys
+    ave_score_home.min_by{|hash| hash.values}.keys
   end
 
   def lowest_scoring_home_team
@@ -80,13 +74,7 @@ class StatTracker
   end
 
   def high_ave_score_hometeam
-    high_ave_score_home.max_by{|hash| hash.values}.keys
-  end
-
-  def high_ave_score_home
-    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
-    end 
+    ave_score_home.max_by{|hash| hash.values}.keys
   end
 
   def team_info(team_id)
@@ -115,7 +103,7 @@ class StatTracker
         {tid => scores.map {|score| score["home_goals"].to_i}.max} 
       end 
   end 
-######
+
 
   def fewest_goals_scored(team_id)
     goals_scored_few = away_goals_low + home_goals_low
