@@ -25,6 +25,7 @@ class StatTracker
   #   end
   # end
 
+  
 
   def low_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
@@ -46,6 +47,23 @@ class StatTracker
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0]
   end
 
+<<<<<<< HEAD
+=======
+  def highest_scoring_visitor
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0] 
+  end
+
+  def high_ave_score_team
+    low_ave_score_away.max_by{|hash| hash.values}.keys
+  end
+
+  def high_ave_score_away
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
+    end 
+  end
+
+>>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
@@ -57,10 +75,75 @@ class StatTracker
   end
 
   def lowest_scoring_home_team
+<<<<<<< HEAD
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
+=======
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
+  end
+>>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
 
+  def highest_scoring_home_team
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0] 
   end
 
+  def high_ave_score_hometeam
+    high_ave_score_home.max_by{|hash| hash.values}.keys
+  end
+
+  def high_ave_score_home
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
+    end 
+  end
+
+  def team_info(team_id)
+    teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
+    teams_hash.delete("Stadium")
+    teams_hash["franchise_id"] = teams_hash.delete("franchiseId")
+    teams_hash["team_name"] = teams_hash.delete("teamName")
+    teams_hash
+  end
+
+<<<<<<< HEAD
+=======
+
+
+  def most_goals_scored(team_id)
+    goals_scored = away_goals_high + home_goals_high
+    goals_scored.map {|team_scores| team_scores[team_id]}.compact.max
+  end
+
+  def away_goals_high
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
+    end 
+  end 
+
+  def home_goals_high
+      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
+      end 
+  end 
+######
+
+  def fewest_goals_scored(team_id)
+    goals_scored_few = away_goals_low + home_goals_low
+    goals_scored_few.map {|team_scores| team_scores[team_id]}.compact.min
+  end
+
+  def away_goals_low
+    @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
+    end 
+  end 
+
+  def home_goals_low
+      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
+      end 
+  end 
+
+>>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
   end
@@ -129,6 +212,7 @@ class StatTracker
     averages
   end
 
+#Start of helper methods for winningest coach and worst coach
   def games_by_season(season_id)
     @games_data.each_with_object([]) do |row, array|
       array << row["game_id"] if row["season"] == season_id
@@ -160,6 +244,7 @@ class StatTracker
     sorted_wins_by_coach(season_id)[-1][0]
   end
 
+#Start of helper methods for best season and worst season
   def season_ids
     @games_data.map { |row| row["season"] }.uniq
   end
@@ -200,6 +285,7 @@ class StatTracker
     hash.key(hash.values.min)
   end
 
+<<<<<<< HEAD
   #/////Work in progress////
   def most_tackles(season)
     get_team_ids.map do |id|
@@ -209,5 +295,81 @@ class StatTracker
 
   def fewest_tackles
 
+=======
+  def count_of_games_by_season
+    games_by_season = Hash.new(0)
+    @games_data.each do |row|
+      games_by_season[row["season"]] = games_by_season[row["season"]] + 1
+    end
+    games_by_season
+  end
+
+  # def count_of_teams
+  #   @teams_data.map { |row| row["teamName"] }.uniq.count
+  #   # teams_total = Hash.new(0)
+  #   # @teams_data.map do |row|
+  #   #   teams_total[row["teamName"].length]
+  # end
+
+  # def best_offense
+  # end
+
+  # def worst_offense
+  # end 
+
+#Start of helper methods for rival and favorite opponent methods
+  def game_ids_by_team(team_id)
+    @games_data.each_with_object([]) do |row, array|
+      array << row["game_id"] if row["away_team_id"] == team_id || row["home_team_id"] == team_id
+    end
+  end
+
+  def opponents_data(team_id)
+    games = game_ids_by_team(team_id)
+    @game_teams_data.each_with_object([]) do |row, array|
+      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+    end
+  end
+
+  def opponents_win_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1 if row["result"] == "WIN"
+    end
+  end
+
+  def opponents_games_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1
+    end
+  end
+
+  def opponent_win_percentage(team_id, opponent_id)
+    (opponents_win_totals(team_id)[opponent_id] / opponents_games_totals(team_id)[opponent_id].to_f).round(3)
+  end
+
+  def opponents_ids(team_id)
+    opponents_data(team_id).map { |row| row["team_id"] }.uniq
+  end
+
+  def all_opponents_win_percentages(team_id)
+    opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
+      hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
+    end
+  end
+
+  def get_team_name(team_id)
+    team = @teams_data.find { |row| row["team_id"] == team_id }
+    team["teamName"]
+  end
+
+  def favorite_opponent(team_id)
+    hash = all_opponents_win_percentages(team_id)
+    get_team_name(hash.key(hash.values.min))
+  end
+
+  def rival(team_id)
+    hash = all_opponents_win_percentages(team_id)
+    get_team_name(hash.key(hash.values.max))
+>>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   end
 end
