@@ -291,6 +291,14 @@ class StatTracker
     games_by_team
   end
 
+  def count_of_goals_by_team
+    goals_by_team = Hash.new(0)
+    @game_teams_data.each do |row|
+      goals_by_team[row["team_id"]] += row["goals"].to_i
+    end
+    goals_by_team
+  end
+
 
 #Start of helper methods for rival and favorite opponent methods
   def game_ids_by_team(team_id)
