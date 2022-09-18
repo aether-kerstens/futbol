@@ -182,25 +182,29 @@ RSpec.describe StatTracker do
       end
     end
 
-    describe 'worst_coach' do
+    describe '#worst_coach' do
       it 'has worst_coach which returns the name of the worst coach as a string' do
         expect(@stat_tracker.worst_coach('20122013')).to eq 'John Tortorella'
       end
     end
 
-    describe 'most_accurate_team' do
+    describe '#most_accurate_team' do
+      it "returns the name of the most accurate team" do
+        expect(@stat_tracker.most_accurate_team('20122013')).to eq("FC Dallas")
+      end
+    end
+
+    describe '#least_accurate_team' do
+      it "returns the name of the least accurate team" do
+        expect(@stat_tracker.least_accurate_team('20122013')).to eq("Sporting Kansas City")
+      end
+    end
+
+    describe '#most_tackles' do
       #test goes here
     end
 
-    describe 'least_accurate_team' do
-      #test goes here
-    end
-
-    describe 'most_tackles' do
-      #test goes here
-    end
-
-    describe 'fewest_tackles' do
+    describe '#fewest_tackles' do
       #test goes here
     end
   end
