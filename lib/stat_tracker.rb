@@ -245,7 +245,12 @@ class StatTracker
     hash = team_accuracy_by_season(season_id)
     get_team_name(hash.key(hash.values.max))
   end
-  
+
+  def least_accurate_team(season_id)
+    hash = team_accuracy_by_season(season_id)
+    get_team_name(hash.key(hash.values.min))
+  end
+
 #Start of helper methods for best season and worst season
   def season_ids
     @games_data.map { |row| row["season"] }.uniq
