@@ -42,8 +42,75 @@ RSpec.describe Games do
     end
   end
 
+  describe 'highest scoring visitor helper methods' do 
+    it 'writes tests for highest scoring visitor #high_ave_score_team helper method' do 
+      expect(@games.high_ave_score_away).to eq(["6"])
+
+    end
+
+    it 'writes tests for highest scoring visitor #low_ave_score_hometeam helper method' do 
+      expect(@games.low_ave_score_hometeam).to eq(["5"])
+
+    end
+
+    it 'ave_score_home' do 
+      expect(@games.ave_score_home).to eq([{"6"=>2.2857142857142856}, {"3"=>1.5}, {"5"=>0.5}, {"14"=>2.3333333333333335}, {"4"=>3.0}])
+    end
+
+    it 'high_ave_score_hometeam' do 
+      expect(@games.high_ave_score_hometeam).to eq(["4"])
+
+    end
+  end
+
+  describe 'lowest scoring visitor helper methods' do 
+    #add to teams spec
+    # it 'returns a list of team_ids and associated names' do 
+    #   expect(@games.team_id_to_name).to eq(
+    #     [{"1"=>"Atlanta United"},
+    #     {"4"=>"Chicago Fire"},
+    #     {"26"=>"FC Cincinnati"},
+    #     {"14"=>"DC United"},
+    #     {"6"=>"FC Dallas"},
+    #     {"3"=>"Houston Dynamo"},
+    #     {"5"=>"Sporting Kansas City"},
+    #     {"17"=>"LA Galaxy"},
+    #     {"28"=>"Los Angeles FC"}]
+    #   )
+    # end
+
+    it 'returns the lowest scoring teams team_id' do 
+      expect(@games.low_ave_score_away).to eq(["5"])
+    end 
+
+    it 'finds each team_ids average for scores for all games when away' do 
+      expect(@games.ave_score_away).to eq([{"3"=>1.25}, {"6"=>2.7142857142857144}, {"5"=>0.5}, {"14"=>2.0}])
+    end 
+  end
+
+  it 'finds highest number of goals for each team_id to help most_goals_scored when away' do 
+    expect(@games.away_goals_high).to eq([{"3"=>2}, {"6"=>4}, {"5"=>1}, {"14"=>2}])
+
+  end
+
+  it 'finds lowest number of goals for each team_id to help fewest goals scored when away' do 
+    expect(@games.away_goals_low).to eq([{"3"=>0}, {"6"=>1}, {"5"=>0}, {"14"=>2}])
+
+  end
+
+  it 'finds highest number of goals for each team_id to help most_goals_scored when home' do 
+    expect(@games.home_goals_high).to eq([{"6"=>3}, {"3"=>2}, {"5"=>1}, {"14"=>3}, {"4"=>3}])
+
+  end
+
+  it 'finds lowest number of goals for each team_id to help most_goals_scored when home' do 
+    expect(@games.home_goals_low).to eq([{"6"=>1}, {"3"=>1}, {"5"=>0}, {"14"=>2}, {"4"=>3}])
+
+  end
 
 
 
-  
+
+
+
 end

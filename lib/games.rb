@@ -94,15 +94,6 @@ class Games
       row["season"] == season_id
     end.map { |row| row["game_id"] }
   end
-
-
-
-
-
-
-
-
-
 end
 
 
