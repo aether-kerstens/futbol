@@ -283,6 +283,15 @@ class StatTracker
     @teams_data.map { |row| row["teamName"] }.uniq.count
   end
 
+  def count_of_games_by_team
+    games_by_team = Hash.new(0)
+    @game_teams_data.each do |row|
+      games_by_team[row["team_id"]] += 1
+    end
+    games_by_team
+  end
+
+
 #Start of helper methods for rival and favorite opponent methods
   def game_ids_by_team(team_id)
     @games_data.each_with_object([]) do |row, array|
