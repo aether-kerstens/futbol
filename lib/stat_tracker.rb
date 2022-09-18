@@ -230,6 +230,16 @@ class StatTracker
     sorted_wins_by_coach(season_id)[-1][0]
   end
 
+#Start of helper methods for most accurate team and least accurate team
+  def team_accuracy_by_season(season_id)
+    hash = Hash.new{|h,k| h[k] = {goals: 0, shots: 0}}
+    data_by_season(season_id).each do |row|
+      hash[row["team_id"]][:goals] += row["goals"].to_i
+      hash[row["team_id"]][:shots] += row["shots"].to_i
+    end
+    hash.each {|team_id, ratio| hash[team_id] = ratio[:goals]/ratio[:shots].to_f}
+    hash
+  end
 #Start of helper methods for best season and worst season
   def season_ids
     @games_data.map { |row| row["season"] }.uniq
