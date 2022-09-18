@@ -25,7 +25,7 @@ class StatTracker
   #   end
   # end
 
-  
+
 
   def low_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
@@ -48,7 +48,7 @@ class StatTracker
   end
 
   def highest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0]
   end
 
   def high_ave_score_team
@@ -57,8 +57,8 @@ class StatTracker
 
   def high_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
-    end 
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
+    end
   end
 
   def low_ave_score_home
@@ -72,11 +72,11 @@ class StatTracker
   end
 
   def lowest_scoring_home_team
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
   end
 
   def highest_scoring_home_team
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0]
   end
 
   def high_ave_score_hometeam
@@ -85,8 +85,8 @@ class StatTracker
 
   def high_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
-    end 
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
+    end
   end
 
   def team_info(team_id)
@@ -106,15 +106,15 @@ class StatTracker
 
   def away_goals_high
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
-    end 
-  end 
+      {tid => scores.map {|score| score["away_goals"].to_i}.max}
+    end
+  end
 
   def home_goals_high
       @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
-      end 
-  end 
+        {tid => scores.map {|score| score["home_goals"].to_i}.max}
+      end
+  end
 ######
 
   def fewest_goals_scored(team_id)
@@ -124,15 +124,15 @@ class StatTracker
 
   def away_goals_low
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
-    end 
-  end 
+      {tid => scores.map {|score| score["away_goals"].to_i}.min}
+    end
+  end
 
   def home_goals_low
       @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
-      end 
-  end 
+        {tid => scores.map {|score| score["home_goals"].to_i}.min}
+      end
+  end
 
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
@@ -279,18 +279,13 @@ class StatTracker
     games_by_season
   end
 
-  # def count_of_teams
-  #   @teams_data.map { |row| row["teamName"] }.uniq.count
-  #   # teams_total = Hash.new(0)
-  #   # @teams_data.map do |row|
-  #   #   teams_total[row["teamName"].length]
-  # end
-
-  # def best_offense
-  # end
-
-  # def worst_offense
-  # end 
+  def count_of_games_by_season
+    games_by_season = Hash.new(0)
+    @games_data.each do |row|
+      games_by_season[row["season"]] = games_by_season[row["season"]] + 1
+    end
+    games_by_season
+  end
 
 #Start of helper methods for rival and favorite opponent methods
   def game_ids_by_team(team_id)
@@ -302,7 +297,7 @@ class StatTracker
   def opponents_data(team_id)
     games = game_ids_by_team(team_id)
     @game_teams_data.each_with_object([]) do |row, array|
-      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id
     end
   end
 
