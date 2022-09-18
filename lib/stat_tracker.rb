@@ -299,6 +299,11 @@ class StatTracker
     goals_by_team
   end
 
+  def get_teams
+    @teams_data.map {|row| row["team_id"]}.uniq
+  end
+
+
 
 #Start of helper methods for rival and favorite opponent methods
   def game_ids_by_team(team_id)
