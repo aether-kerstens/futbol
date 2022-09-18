@@ -25,7 +25,7 @@ class StatTracker
   #   end
   # end
 
-  
+
 
   def low_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
@@ -50,7 +50,7 @@ class StatTracker
 <<<<<<< HEAD
 =======
   def highest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0]
   end
 
   def high_ave_score_team
@@ -59,8 +59,8 @@ class StatTracker
 
   def high_ave_score_away
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length} 
-    end 
+      {tid => scores.sum {|score| score["away_goals"].to_i}.to_f/ scores.length}
+    end
   end
 
 >>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
@@ -76,14 +76,18 @@ class StatTracker
 
   def lowest_scoring_home_team
 <<<<<<< HEAD
+<<<<<<< HEAD
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
 =======
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
+=======
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
+>>>>>>> 0fee6a5fbf6ac93fc9df6a86d31a8ecc54d16c12
   end
 >>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
 
   def highest_scoring_home_team
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0] 
+    team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0]
   end
 
   def high_ave_score_hometeam
@@ -92,8 +96,8 @@ class StatTracker
 
   def high_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length} 
-    end 
+      {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
+    end
   end
 
   def team_info(team_id)
@@ -115,15 +119,15 @@ class StatTracker
 
   def away_goals_high
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
-    end 
-  end 
+      {tid => scores.map {|score| score["away_goals"].to_i}.max}
+    end
+  end
 
   def home_goals_high
       @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
-      end 
-  end 
+        {tid => scores.map {|score| score["home_goals"].to_i}.max}
+      end
+  end
 ######
 
   def fewest_goals_scored(team_id)
@@ -133,15 +137,15 @@ class StatTracker
 
   def away_goals_low
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
-    end 
-  end 
+      {tid => scores.map {|score| score["away_goals"].to_i}.min}
+    end
+  end
 
   def home_goals_low
       @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
-      end 
-  end 
+        {tid => scores.map {|score| score["home_goals"].to_i}.min}
+      end
+  end
 
 >>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   def highest_total_score
@@ -244,6 +248,27 @@ class StatTracker
     sorted_wins_by_coach(season_id)[-1][0]
   end
 
+#Start of helper methods for most accurate team and least accurate team
+  def team_accuracy_by_season(season_id)
+    hash = Hash.new{|h,k| h[k] = {goals: 0, shots: 0}}
+    data_by_season(season_id).each do |row|
+      hash[row["team_id"]][:goals] += row["goals"].to_i
+      hash[row["team_id"]][:shots] += row["shots"].to_i
+    end
+    hash.each {|team_id, ratio| hash[team_id] = ratio[:goals]/ratio[:shots].to_f}
+    hash
+  end
+
+  def most_accurate_team(season_id)
+    hash = team_accuracy_by_season(season_id)
+    get_team_name(hash.key(hash.values.max))
+  end
+
+  def least_accurate_team(season_id)
+    hash = team_accuracy_by_season(season_id)
+    get_team_name(hash.key(hash.values.min))
+  end
+
 #Start of helper methods for best season and worst season
   def season_ids
     @games_data.map { |row| row["season"] }.uniq
@@ -275,6 +300,13 @@ class StatTracker
     end
   end
 
+  def average_win_percentage(team_id)
+    data = @game_teams_data.select{|row| row["team_id"] == team_id}
+    total_wins = data.count{|row| row["result"] == "WIN"}
+    total_games = count_of_games_by_team[team_id]
+    (total_wins / total_games.to_f).round(2)
+  end
+
   def best_season(team_id)
     hash = team_percentage_wins_all_seasons(team_id)
     hash.key(hash.values.max)
@@ -304,18 +336,49 @@ class StatTracker
     games_by_season
   end
 
-  # def count_of_teams
-  #   @teams_data.map { |row| row["teamName"] }.uniq.count
-  #   # teams_total = Hash.new(0)
-  #   # @teams_data.map do |row|
-  #   #   teams_total[row["teamName"].length]
-  # end
+  def count_of_teams
+    @teams_data.map { |row| row["teamName"] }.uniq.count
+  end
 
-  # def best_offense
-  # end
+  def count_of_games_by_team
+    games_by_team = Hash.new(0)
+    @game_teams_data.each do |row|
+      games_by_team[row["team_id"]] += 1
+    end
+    games_by_team
+  end
 
-  # def worst_offense
-  # end 
+  def count_of_goals_by_team
+    goals_by_team = Hash.new(0)
+    @game_teams_data.each do |row|
+      goals_by_team[row["team_id"]] += row["goals"].to_i
+    end
+    goals_by_team
+  end
+
+  def get_teams
+    @teams_data.map {|row| row["team_id"]}.uniq
+  end
+
+  def average_goals_by_team
+    average_goals = Hash.new(0)
+    count_of_goals_by_team.each do |team_id, goals|
+      average_goals[team_id] = count_of_goals_by_team[team_id] / count_of_games_by_team[team_id].to_f
+    end
+    average_goals
+  end
+
+  def best_offense
+    team_id = average_goals_by_team.key(average_goals_by_team.values.max)
+    get_team_name(team_id)
+  end
+
+  def worst_offense
+    team_id = average_goals_by_team.key(average_goals_by_team.values.min)
+    get_team_name(team_id)
+  end
+
+
 
 #Start of helper methods for rival and favorite opponent methods
   def game_ids_by_team(team_id)
@@ -327,7 +390,7 @@ class StatTracker
   def opponents_data(team_id)
     games = game_ids_by_team(team_id)
     @game_teams_data.each_with_object([]) do |row, array|
-      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id
     end
   end
 
