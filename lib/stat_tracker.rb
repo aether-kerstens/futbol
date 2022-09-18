@@ -240,6 +240,12 @@ class StatTracker
     hash.each {|team_id, ratio| hash[team_id] = ratio[:goals]/ratio[:shots].to_f}
     hash
   end
+
+  def most_accurate_team(season_id)
+    hash = team_accuracy_by_season(season_id)
+    get_team_name(hash.key(hash.values.max))
+  end
+  
 #Start of helper methods for best season and worst season
   def season_ids
     @games_data.map { |row| row["season"] }.uniq
