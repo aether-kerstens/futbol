@@ -146,7 +146,7 @@ RSpec.describe StatTracker do
       it 'returns name of team with lowest avg score per game' do
         expect(@stat_tracker.lowest_scoring_visitor).to eq('Sporting Kansas City')
       end
-      it 'writes tests for lowest scoring visitor #team_id_to_name helper method' do 
+      it 'returns a list of team_ids and associated names' do 
         expect(@stat_tracker.team_id_to_name).to eq(
           [{"1"=>"Atlanta United"},
           {"4"=>"Chicago Fire"},
@@ -161,12 +161,12 @@ RSpec.describe StatTracker do
 # require 'pry'; binding.pry
       end
 
-      it 'writes tests for lowest scoring visitor #low_ave_score_team helper method' do 
+      it 'returns the lowest scoring teams team_id' do 
         expect(@stat_tracker.low_ave_score_team).to eq(["5"])
 
       end 
 
-      it 'writes tests for lowest scoring visitor #low_ave_score_away helper method' do 
+      it 'finds each team_ids average for scores for all games when away' do 
         expect(@stat_tracker.low_ave_score_away).to eq([{"3"=>1.25}, {"6"=>2.7142857142857144}, {"5"=>0.5}, {"14"=>2.0}])
 
       end 
@@ -297,12 +297,12 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.most_goals_scored('6')).to eq(4)
       end
 
-      it 'writes #away_goals_high helper method for most goals scored' do 
+      it 'finds highest number of goals for each team_id to help most_goals_scored when away' do 
         expect(@stat_tracker.away_goals_high).to eq([{"3"=>2}, {"6"=>4}, {"5"=>1}, {"14"=>2}])
 
       end
 
-      it 'writes #away_goals_low helper method for most goals scored' do 
+      it 'finds lowest number of goals for each team_id to help fewest goals scored when away' do 
         expect(@stat_tracker.away_goals_low).to eq([{"3"=>0}, {"6"=>1}, {"5"=>0}, {"14"=>2}])
 
       end
@@ -314,12 +314,12 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.fewest_goals_scored('6')).to eq(1)
       end
 
-      it 'writes #home_goals_high helper method for most goals scored' do 
+      it 'finds highest number of goals for each team_id to help most_goals_scored when home' do 
         expect(@stat_tracker.home_goals_high).to eq([{"6"=>3}, {"3"=>2}, {"5"=>1}, {"14"=>3}, {"4"=>3}])
 
       end
 
-      it 'writes #home_goals_low helper method for most goals scored' do 
+      it 'finds lowest number of goals for each team_id to help most_goals_scored when home' do 
         expect(@stat_tracker.home_goals_low).to eq([{"6"=>1}, {"3"=>1}, {"5"=>0}, {"14"=>2}, {"4"=>3}])
 
       end
