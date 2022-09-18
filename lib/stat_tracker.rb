@@ -279,12 +279,8 @@ class StatTracker
     games_by_season
   end
 
-  def count_of_games_by_season
-    games_by_season = Hash.new(0)
-    @games_data.each do |row|
-      games_by_season[row["season"]] = games_by_season[row["season"]] + 1
-    end
-    games_by_season
+  def count_of_teams
+    @teams_data.map { |row| row["teamName"] }.uniq.count
   end
 
 #Start of helper methods for rival and favorite opponent methods
