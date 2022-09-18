@@ -47,8 +47,6 @@ class StatTracker
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_team[0]}}.values[0]
   end
 
-<<<<<<< HEAD
-=======
   def highest_scoring_visitor
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_team[0]}}.values[0]
   end
@@ -63,7 +61,6 @@ class StatTracker
     end
   end
 
->>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   def low_ave_score_home
     @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
       {tid => scores.sum {|score| score["home_goals"].to_i}.to_f/ scores.length}
@@ -75,16 +72,8 @@ class StatTracker
   end
 
   def lowest_scoring_home_team
-<<<<<<< HEAD
-<<<<<<< HEAD
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
-=======
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0] 
-=======
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == low_ave_score_hometeam[0]}}.values[0]
->>>>>>> 0fee6a5fbf6ac93fc9df6a86d31a8ecc54d16c12
   end
->>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
 
   def highest_scoring_home_team
     team_id_to_name.find {|pairs| pairs.find {|key, value| key == high_ave_score_hometeam[0]}}.values[0]
@@ -107,10 +96,6 @@ class StatTracker
     teams_hash["team_name"] = teams_hash.delete("teamName")
     teams_hash
   end
-
-<<<<<<< HEAD
-=======
-
 
   def most_goals_scored(team_id)
     goals_scored = away_goals_high + home_goals_high
@@ -147,7 +132,6 @@ class StatTracker
       end
   end
 
->>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   def highest_total_score
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
   end
@@ -317,17 +301,25 @@ class StatTracker
     hash.key(hash.values.min)
   end
 
-<<<<<<< HEAD
   #/////Work in progress////
   def most_tackles(season)
-    get_team_ids.map do |id|
-      games_by_season(season).reject {|row| row["team_id"] != id}.map {|row| row["tackles"].to_i}.sum
+    season_games = games_by_season(season)
+    tackles_by_team = get_team_ids.each_with_object({}) do |id, hash|
+      hash[id] = @game_teams_data.reject {|row| row["team_id"] != id && !season_games.include?(row["game_id"])}.map {|row| row["tackles"].to_i}.sum
     end
+    id = tackles_by_team.key(tackles_by_team.values.max)
+    get_team_name(id)
   end
 
-  def fewest_tackles
+  def fewest_tackles(season)
+    season_games = games_by_season(season)
+    tackles_by_team = get_team_ids.each_with_object({}) do |id, hash|
+      hash[id] = @game_teams_data.reject {|row| row["team_id"] != id && !season_games.include?(row["game_id"])}.map {|row| row["tackles"].to_i}.sum
+    end
+    id = tackles_by_team.key(tackles_by_team.values.min)
+    get_team_name(id)
+  end
 
-=======
   def count_of_games_by_season
     games_by_season = Hash.new(0)
     @games_data.each do |row|
@@ -433,6 +425,5 @@ class StatTracker
   def rival(team_id)
     hash = all_opponents_win_percentages(team_id)
     get_team_name(hash.key(hash.values.max))
->>>>>>> ffe4a44f81aedc388bad5b7ab6c40764c12f2be7
   end
 end
