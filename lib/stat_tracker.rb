@@ -305,7 +305,7 @@ class StatTracker
 
   def average_goals_by_team
     average_goals = Hash.new(0)
-    get_teams.each do |team_id|
+    count_of_goals_by_team.each do |team_id, goals|
       average_goals[team_id] = count_of_goals_by_team[team_id] / count_of_games_by_team[team_id].to_f
     end
     average_goals
