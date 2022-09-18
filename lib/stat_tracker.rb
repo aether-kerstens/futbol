@@ -303,6 +303,14 @@ class StatTracker
     @teams_data.map {|row| row["team_id"]}.uniq
   end
 
+  def average_goals_by_team
+    average_goals = Hash.new(0)
+    get_teams.each do |team_id|
+      average_goals[team_id] = count_of_goals_by_team[team_id] / count_of_games_by_team[team_id].to_f
+    end
+    average_goals
+  end
+
 
 
 #Start of helper methods for rival and favorite opponent methods
