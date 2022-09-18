@@ -311,6 +311,16 @@ class StatTracker
     average_goals
   end
 
+  def best_offense
+    team_id = average_goals_by_team.key(average_goals_by_team.values.max)
+    get_team_name(team_id)
+  end
+
+  def worst_offense
+    team_id = average_goals_by_team.key(average_goals_by_team.values.min)
+    get_team_name(team_id)
+  end
+
 
 
 #Start of helper methods for rival and favorite opponent methods
