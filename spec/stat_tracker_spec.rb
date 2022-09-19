@@ -134,23 +134,6 @@ RSpec.describe StatTracker do
   end
 
   context 'season statistics' do
-    describe 'winningest and worst coaches helper methods' do
-
-      it 'has wins_by_coach which returns hash with coach key and no. wins value' do
-        expect(@stat_tracker.wins_by_coach('20122013')).to be_a Hash
-        expect(@stat_tracker.wins_by_coach('20122013')['John Tortorella']).to eq 0
-        expect(@stat_tracker.wins_by_coach('20122013')['Claude Julien']).to eq 9
-      end
-
-      it 'has sorted_wins_by_coach which returns a nested array sorting wins_by_coach by wins' do
-        expect(@stat_tracker.sorted_wins_by_coach('20122013')).to be_an Array
-        max_wins = @stat_tracker.wins_by_coach('20122013').values.max
-        min_wins = @stat_tracker.wins_by_coach('20122013').values.min
-        expect(@stat_tracker.sorted_wins_by_coach('20122013')[0][1]).to eq max_wins
-        expect(@stat_tracker.sorted_wins_by_coach('20122013')[-1][1]).to eq min_wins
-      end
-    end
-
     describe '#winningest_coach' do
       it 'has winningest_coach which returns the name of winningest coach as a string' do
         expect(@stat_tracker.winningest_coach('20122013')).to eq 'Claude Julien'

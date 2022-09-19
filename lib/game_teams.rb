@@ -39,6 +39,12 @@ class GameTeams
     end
   end
 
+  def wins_by_coach(season_id)
+    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+      row["result"] == "WIN" ? hash[row["head_coach"]] += 1 : hash[row["head_coach"]] += 0
+    end
+  end
+
   
 
   

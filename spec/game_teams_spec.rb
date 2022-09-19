@@ -33,6 +33,14 @@ RSpec.describe GameTeams do
     end
   end
 
+  describe '#wins_by_coach' do 
+    it 'returns hash with coach key and no. wins value' do
+      expect(@game_teams.wins_by_coach('20122013')).to be_a Hash
+      expect(@game_teams.wins_by_coach('20122013')['John Tortorella']).to eq 0
+      expect(@game_teams.wins_by_coach('20122013')['Claude Julien']).to eq 9
+    end
+  end
+
 
 
 

@@ -103,32 +103,16 @@ class StatTracker
   ################ END OF LEAGUE METHODS ##############
 
   ############### START OF SEASON METHODS ##############
-
-
-
-#UNCATEGORIZED HELPER METHOD#
-  def wins_by_coach(season_id)
-    @game_teams.data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
-      row["result"] == "WIN" ? hash[row["head_coach"]] += 1 : hash[row["head_coach"]] += 0
-    end
-  end
-
-#UNCATEGORIZED HELPER METHOD#
-  def sorted_wins_by_coach(season_id)
-    wins_by_coach(season_id).sort_by { |coach, wins| wins }.reverse
-  end
-
   def winningest_coach(season_id)
-    sorted_wins_by_coach(season_id)[0][0]
+    hash = @game_teams.wins_by_coach(season_id)
+    hash.key(hash.values.max)
   end
 
   def worst_coach(season_id)
-    sorted_wins_by_coach(season_id)[-1][0]
+    hash = @game_teams.wins_by_coach(season_id)
+    hash.key(hash.values.min)
   end
- 
-  #most accurate team
 
-  #least accurate team
   def most_tackles(season)
     season_games = @game_teams.data_by_season(season)
     tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
