@@ -35,12 +35,13 @@ RSpec.describe Games do
       expect(@games.total_games).to eq 15
     end
   end 
-
-  describe "season helper methods" do
-    it 'has games_by_season which returns an array of games_ids' do
-      expect(@games.games_by_season('20122013')).to eq ['2012030221', '2012030222', '2012030223', '2012030224', '2012030225', '2012030311', '2012030312', '2012030313', '2012030314']
+  
+  describe "#list of game ids" do
+    it 'returns an array of games_ids' do
+     expect(@games.list_of_game_ids).to eq ["2012030221", "2012030222", "2012030223", "2012030224", "2012030225", "2012030311", "2012030312", "2012030313", "2012030314", "2017030211", "2017030212", "2017030213", "2017030214", "2017030215", "2017021257"]
     end
   end
+
 
   describe 'highest scoring visitor helper methods' do 
     it 'writes tests for highest scoring visitor #high_ave_score_team helper method' do 

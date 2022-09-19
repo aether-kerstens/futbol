@@ -19,7 +19,11 @@ RSpec.describe GameTeams do
     #write tests for count_of_games_by_team, count_of_goals_by_team, average_goals_by_team
   end
 
-  
+  describe 'gets data in game_teams by season' do 
+    it '#data_by_season' do 
+      
+    end
+  end
 
 
 

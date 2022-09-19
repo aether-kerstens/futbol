@@ -103,7 +103,8 @@ class StatTracker
 
 #UNCATEGORIZED HELPER METHOD#
   def data_by_season(season_id)
-    games = @games.games_by_season(season_id)
+    season = Season.new(games_data, season_id)
+    games = season.list_of_game_ids
     @game_teams_data.each_with_object([]) do |row, array|
       array << row if games.include?(row["game_id"])
     end

@@ -89,10 +89,8 @@ class Games
     @games_data.count {|row| row["season"] == season}
   end
 
-  def games_by_season(season_id)
-    @games_data.select do |row|
-      row["season"] == season_id
-    end.map { |row| row["game_id"] }
+  def list_of_game_ids
+    @games_data.map {|row| row["game_id"]}
   end
 end
 

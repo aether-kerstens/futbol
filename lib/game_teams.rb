@@ -1,4 +1,5 @@
 require 'csv'
+require './lib/season'
 
 class GameTeams 
   def initialize(game_teams_data)
@@ -12,7 +13,7 @@ class GameTeams
     end
     games_by_team
   end
-  
+
   def count_of_goals_by_team
     goals_by_team = Hash.new(0)
     @game_teams_data.each do |row|
@@ -27,6 +28,14 @@ class GameTeams
       average_goals[team_id] = count_of_goals_by_team[team_id] / count_of_games_by_team[team_id].to_f
     end
     average_goals
+  end
+
+  def data_by_season(season_id)
+    season = Season.new(games_data, season_id)
+    games = season.list_of_game_ids
+    @game_teams_data.each_with_object([]) do |row, array|
+      array << row if games.include?(row["game_id"])
+    end
   end
 
   
