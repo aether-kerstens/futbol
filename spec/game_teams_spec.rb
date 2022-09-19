@@ -41,6 +41,12 @@ RSpec.describe GameTeams do
     end
   end
 
+  describe '#team_accuracy_by_season' do 
+    it 'returns a hash with team key and ratio of goals to shots as value' do 
+      expect(@game_teams.team_accuracy_by_season("20122013")).to eq({"3"=>0.21052631578947367, "5"=>0.0625, "6"=>0.3157894736842105})
+    end
+  end
+
 
 
 

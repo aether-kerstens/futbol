@@ -31,24 +31,34 @@ class GameTeams
     average_goals
   end
 
-  def data_by_season(season_id)
-    season = Season.new(@games_data, season_id)
+  def data_by_season(season)
+    season = Season.new(@games_data, season)
     games = season.list_of_game_ids
     @game_teams_data.each_with_object([]) do |row, array|
       array << row if games.include?(row["game_id"])
     end
   end
 
-  def wins_by_coach(season_id)
-    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+  def wins_by_coach(season)
+    data_by_season(season).each_with_object(Hash.new(0)) do |row, hash|
       row["result"] == "WIN" ? hash[row["head_coach"]] += 1 : hash[row["head_coach"]] += 0
     end
   end
 
-  
+  def tackles_by_team(season)
+    data_by_season(season).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
+    end
+  end
 
-  
-
-
+  def team_accuracy_by_season(season)
+    hash = Hash.new{|h,k| h[k] = {goals: 0, shots: 0}}
+    data_by_season(season).each do |row|
+      hash[row["team_id"]][:goals] += row["goals"].to_i
+      hash[row["team_id"]][:shots] += row["shots"].to_i
+    end
+    hash.each {|team_id, ratio| hash[team_id] = ratio[:goals]/ratio[:shots].to_f}
+    hash
+  end
 
 end
