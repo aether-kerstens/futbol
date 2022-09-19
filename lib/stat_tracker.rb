@@ -76,7 +76,7 @@ class StatTracker
   end
 
   def count_of_teams
-    @teams_data.map { |row| row["teamName"] }.uniq.count
+    @teams.count_of_teams
   end
 
   def highest_scoring_visitor
@@ -128,11 +128,7 @@ class StatTracker
   ################### END OF SEASON METHODS ##################
   #################### START OF TEAMS METHODS #################
   def team_info(team_id)
-    teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
-    teams_hash.delete("Stadium")
-    teams_hash["franchise_id"] = teams_hash.delete("franchiseId")
-    teams_hash["team_name"] = teams_hash.delete("teamName")
-    teams_hash
+    @teams.team_info(team_id)
   end
 
   def average_win_percentage(team_id)
