@@ -89,9 +89,9 @@ RSpec.describe StatTracker do
   end
 
   context 'league statistics' do
-    describe '#count_of_teams' do
-      #test goes here
-    end
+    # describe '#count_of_teams' do
+    #   #test goes here
+    # end
 
     describe '#best_offense' do
       it 'returns a string of team with best offense' do
@@ -290,6 +290,5 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.rival('6')).to eq 'DC United'
       end
     end
-  end
   end
 end
