@@ -1,5 +1,6 @@
 require 'csv'
 require_relative './season'
+require_relative './games'
 
 class GameTeams 
   def initialize(game_teams_data, games_data)
@@ -119,5 +120,13 @@ class GameTeams
     opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
       hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
     end
+  end
+
+  def data_by_team(team_id)
+    @game_teams_data.select{|row| row["team_id"] == team_id}
+  end 
+
+  def team_total_wins(team_id)
+    data_by_team(team_id).count{|row| row["result"] == "WIN"}
   end
 end

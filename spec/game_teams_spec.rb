@@ -23,7 +23,6 @@ RSpec.describe GameTeams do
   end
 
   describe 'gets data in game_teams by season' do 
-
     it 'has data_by_season which returns an array of game_teams_data rows' do
       expect(@game_teams.data_by_season('20122013')).to be_an Array
       coaches = @game_teams.data_by_season('20122013').map { |row| row['head_coach'] }
@@ -68,7 +67,6 @@ RSpec.describe GameTeams do
   end
 
   describe 'rival and favorite opponent helper methods' do
-
     it 'has an opponents_data which filters the games_teams_data by opponents of a given team' do
       expect(@game_teams.opponents_data('3')).to be_an Array
       coaches = @game_teams.opponents_data('3').map { |row| row['head_coach'] }
@@ -91,10 +89,5 @@ RSpec.describe GameTeams do
       expect(@game_teams.all_opponents_win_percentages('6')).to eq({'3'=>0.00, '5'=>0.00, '14'=>0.40})
     end
   end
-
-
-
-
-
 end
 #season a child class of games 

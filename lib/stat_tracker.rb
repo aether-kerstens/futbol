@@ -136,10 +136,7 @@ class StatTracker
   end
 
   def average_win_percentage(team_id)
-    data = @game_teams_data.select{|row| row["team_id"] == team_id}
-    total_wins = data.count{|row| row["result"] == "WIN"}
-    total_games = @game_teams.count_of_games_by_team[team_id]
-    (total_wins / total_games.to_f).round(2)
+    (@game_teams.team_total_wins(team_id) / @game_teams.count_of_games_by_team[team_id].to_f).round(2)
   end
 
   def best_season(team_id)
