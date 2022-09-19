@@ -92,6 +92,12 @@ class Games
   def list_of_game_ids
     @games_data.map {|row| row["game_id"]}
   end
+
+  def game_ids_by_team(team_id)
+    @games_data.each_with_object([]) do |row, array|
+      array << row["game_id"] if row["away_team_id"] == team_id || row["home_team_id"] == team_id
+    end
+  end
 end
 
 

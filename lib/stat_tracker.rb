@@ -224,15 +224,11 @@ class StatTracker
   end
 
 #UNCATEGORIZED HELPER METHOD#
-  def game_ids_by_team(team_id)
-    @games_data.each_with_object([]) do |row, array|
-      array << row["game_id"] if row["away_team_id"] == team_id || row["home_team_id"] == team_id
-    end
-  end
+
 
 #UNCATEGORIZED HELPER METHOD# 
   def opponents_data(team_id)
-    games = game_ids_by_team(team_id)
+    games = @games.game_ids_by_team(team_id)
     @game_teams_data.each_with_object([]) do |row, array|
       array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
     end
@@ -268,9 +264,6 @@ class StatTracker
       hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
     end
   end
-
-#UNCATEGORIZED HELPER METHOD#
-
 
   def favorite_opponent(team_id)
     hash = all_opponents_win_percentages(team_id)

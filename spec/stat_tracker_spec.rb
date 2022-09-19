@@ -249,9 +249,6 @@ RSpec.describe StatTracker do
     end
 
     describe 'rival and favorite opponent helper methods' do
-      it 'has a game_ids_by_team method which returns an array of games played by the team' do
-        expect(@stat_tracker.game_ids_by_team('3')).to eq ['2012030221', '2012030222', '2012030223', '2012030224', '2012030225', '2017021257']
-      end
 
       it 'has an opponents_data which filters the games_teams_data by opponents of a given team' do
         expect(@stat_tracker.opponents_data('3')).to be_an Array

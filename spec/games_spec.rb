@@ -95,6 +95,9 @@ RSpec.describe Games do
 
   end
 
+  it 'has a game_ids_by_team method which returns an array of games played by the team' do
+    expect(@games.game_ids_by_team('3')).to eq ['2012030221', '2012030222', '2012030223', '2012030224', '2012030225', '2017021257']
+  end
 
 
 
