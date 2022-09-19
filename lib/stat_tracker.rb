@@ -97,8 +97,6 @@ class StatTracker
     teams_hash
   end
 
-
-
   def most_goals_scored(team_id)
     goals_scored = away_goals_high + home_goals_high
     goals_scored.map {|team_scores| team_scores[team_id]}.compact.max
@@ -142,10 +140,6 @@ class StatTracker
     @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.min
   end
 
-  def get_seasons
-    @games_data.map {|row| row["season"].to_i}.uniq
-  end
-
   def total_home_wins
     @games_data.count { |row| row["home_goals"].to_i > row["away_goals"].to_i }
   end
@@ -162,16 +156,24 @@ class StatTracker
     @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
   end
 
+  def get_team_ids
+    @teams_data.map {|row| row["team_id"]}
+  end
+
+  def get_team(id)
+    @teams_data.reject {|row| row["team_id"] != id}.map {|row| row["teamName"]}[0]
+  end
+
   def total_games
     @games_data.count
   end
 
   def total_goals_by_season(season)
-    @games_data.reject {|row| row["season"].to_i != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
+    @games_data.reject {|row| row["season"] != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
   end
 
   def total_games_by_season(season)
-    @games_data.count {|row| row["season"].to_i == season}
+    @games_data.count {|row| row["season"] == season}
   end
 
   def percentage_home_wins
@@ -192,7 +194,7 @@ class StatTracker
 
   def average_goals_by_season
     averages = {}
-    get_seasons.each do |season|
+    season_ids.each do |season|
       averages[season] = (total_goals_by_season(season) / total_games_by_season(season).to_f).round(2)
     end
     averages
@@ -297,6 +299,25 @@ class StatTracker
   def worst_season(team_id)
     hash = team_percentage_wins_all_seasons(team_id)
     hash.key(hash.values.min)
+  end
+
+  #/////Work in progress////
+  def most_tackles(season)
+    season_games = data_by_season(season)
+    tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
+    end
+    id = tackles_by_team.key(tackles_by_team.values.max)
+    get_team_name(id)
+  end
+
+  def fewest_tackles(season)
+    season_games = data_by_season(season)
+    tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
+    end
+    id = tackles_by_team.key(tackles_by_team.values.min)
+    get_team_name(id)
   end
 
   def count_of_games_by_season
