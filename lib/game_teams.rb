@@ -87,4 +87,38 @@ class GameTeams
       hash[season_id] = team_percentage_wins_by_season(team_id, season_id)
     end
   end
+
+  #UNCATEGORIZED HELPER METHOD# 
+  def opponents_data(team_id)
+    games = Games.new(@games_data).game_ids_by_team(team_id)
+    @game_teams_data.each_with_object([]) do |row, array|
+      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+    end
+  end
+
+  def opponents_win_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1 if row["result"] == "WIN"
+    end
+  end
+
+  def opponents_games_totals(team_id)
+    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1
+    end
+  end
+
+  def opponent_win_percentage(team_id, opponent_id)
+    (opponents_win_totals(team_id)[opponent_id] / opponents_games_totals(team_id)[opponent_id].to_f).round(3)
+  end
+
+  def opponents_ids(team_id)
+    opponents_data(team_id).map { |row| row["team_id"] }.uniq
+  end
+
+  def all_opponents_win_percentages(team_id)
+    opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
+      hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
+    end
+  end
 end

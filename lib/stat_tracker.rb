@@ -47,11 +47,9 @@ class StatTracker
   end
 
   def count_of_games_by_season
-    games_by_season = Hash.new(0)
-    @games_data.each do |row|
-      games_by_season[row["season"]] += 1
+    @games_data.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["season"]] += 1
     end
-    games_by_season
   end
 
   def average_goals_per_game
@@ -171,62 +169,17 @@ class StatTracker
     goals_scored_few = @games.away_goals_low + @games.home_goals_low
     goals_scored_few.map {|team_scores| team_scores[team_id]}.compact.min
   end
-
-#UNCATEGORIZED HELPER METHOD#
-
-
-#UNCATEGORIZED HELPER METHOD# 
-  def opponents_data(team_id)
-    games = @games.game_ids_by_team(team_id)
-    @game_teams_data.each_with_object([]) do |row, array|
-      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
-    end
-  end
-
-#UNCATEGORIZED HELPER METHOD#  
-  def opponents_win_totals(team_id)
-    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
-      hash[row["team_id"]] += 1 if row["result"] == "WIN"
-    end
-  end
-
-#UNCATEGORIZED HELPER METHOD#  
-  def opponents_games_totals(team_id)
-    opponents_data(team_id).each_with_object(Hash.new(0)) do |row, hash|
-      hash[row["team_id"]] += 1
-    end
-  end
-
-#UNCATEGORIZED HELPER METHOD#  
-  def opponent_win_percentage(team_id, opponent_id)
-    (opponents_win_totals(team_id)[opponent_id] / opponents_games_totals(team_id)[opponent_id].to_f).round(3)
-  end
-
-#UNCATEGORIZED HELPER METHOD#  
-  def opponents_ids(team_id)
-    opponents_data(team_id).map { |row| row["team_id"] }.uniq
-  end
-
-
 #helper methods that multiple classes are using: modules
 #create a class method on game (all) game.all would return an array on
 #make game objects
 
-
-#UNCATEGORIZED HELPER METHOD#  
-  def all_opponents_win_percentages(team_id)
-    opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
-      hash[opponent_id] = opponent_win_percentage(team_id, opponent_id)
-    end
-  end
-
   def favorite_opponent(team_id)
-    hash = all_opponents_win_percentages(team_id)
+    hash = @game_teams.all_opponents_win_percentages(team_id)
     @teams.get_team_name(hash.key(hash.values.min))
   end
 
   def rival(team_id)
-    hash = all_opponents_win_percentages(team_id)
+    hash = @game_teams.all_opponents_win_percentages(team_id)
     @teams.get_team_name(hash.key(hash.values.max))
   end
 end

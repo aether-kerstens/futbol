@@ -215,33 +215,6 @@ RSpec.describe StatTracker do
       end
     end
 
-    describe 'rival and favorite opponent helper methods' do
-
-      it 'has an opponents_data which filters the games_teams_data by opponents of a given team' do
-        expect(@stat_tracker.opponents_data('3')).to be_an Array
-        coaches = @stat_tracker.opponents_data('3').map { |row| row['head_coach'] }
-        expect(coaches).to eq ['Claude Julien', 'Claude Julien', 'Claude Julien', 'Claude Julien', 'Claude Julien', 'Dave Hakstol']
-      end
-
-      it 'has opponents_win_totals which returns a hash of opponents_ids => win total' do
-        expect(@stat_tracker.opponents_win_totals('3')).to eq({'6'=>5, '4'=>1})
-      end
-
-      it 'has opponents_games_totals which returns a hash of opponents_ids => total games' do
-        expect(@stat_tracker.opponents_games_totals('3')).to eq({'6'=>5, '4'=>1})
-      end
-
-      it 'has opponents_ids which returns an array of all oppoenents faced by given team' do
-        expect(@stat_tracker.opponents_ids('3')).to eq ['6', '4']
-      end
-
-      it 'has all_opponents_win_percentages which returns a hash of opponents_ids => win percentage' do
-        expect(@stat_tracker.all_opponents_win_percentages('6')).to eq({'3'=>0.00, '5'=>0.00, '14'=>0.40})
-      end
-
-
-    end
-
     describe '#favorite_opponent' do
       it 'eturns the opponent with the lowest win percentage for the given team' do
         expect(@stat_tracker.favorite_opponent('6')).to eq 'Houston Dynamo'
