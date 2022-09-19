@@ -61,4 +61,30 @@ class GameTeams
     hash
   end
 
+  def win_totals_by_season(season)
+    data_by_season(season).each_with_object(Hash.new(0)) do |row, hash|
+      if row["result"] == "WIN"
+        hash[row["team_id"]] += 1
+      else
+        hash[row["team_id"]] += 0
+      end
+    end
+  end
+
+  def total_games_played_by_season(season)
+    data_by_season(season).each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += 1
+    end
+  end
+ 
+  def team_percentage_wins_by_season(team_id, season)
+    (win_totals_by_season(season)[team_id] / total_games_played_by_season(season)[team_id].to_f).round(3)
+  end
+
+   def team_percentage_wins_all_seasons(team_id)
+    games = Games.new(@games_data)
+    games.get_seasons.each_with_object({}) do |season_id, hash|
+      hash[season_id] = team_percentage_wins_by_season(team_id, season_id)
+    end
+  end
 end

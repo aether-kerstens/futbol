@@ -145,36 +145,6 @@ class StatTracker
     teams_hash
   end
 
-#UNCATEGORIZED HELPER METHOD#
-  def win_totals_by_season(season_id)
-    @game_teams.data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
-      if row["result"] == "WIN"
-        hash[row["team_id"]] += 1
-      else
-        hash[row["team_id"]] += 0
-      end
-    end
-  end
-
-#UNCATEGORIZED HELPER METHOD#
-  def total_games_played_by_season(season_id)
-    @game_teams.data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
-      hash[row["team_id"]] += 1
-    end
-  end
-
-#UNCATEGORIZED HELPER METHOD#  
-  def team_percentage_wins_by_season(team_id, season_id)
-    (win_totals_by_season(season_id)[team_id] / total_games_played_by_season(season_id)[team_id].to_f).round(3)
-  end
-
-#UNCATEGORIZED HELPER METHOD#  
-  def team_percentage_wins_all_seasons(team_id)
-    @games.get_seasons.each_with_object({}) do |season_id, hash|
-      hash[season_id] = team_percentage_wins_by_season(team_id, season_id)
-    end
-  end
-
   def average_win_percentage(team_id)
     data = @game_teams_data.select{|row| row["team_id"] == team_id}
     total_wins = data.count{|row| row["result"] == "WIN"}
@@ -183,16 +153,14 @@ class StatTracker
   end
 
   def best_season(team_id)
-    hash = team_percentage_wins_all_seasons(team_id)
+    hash = @game_teams.team_percentage_wins_all_seasons(team_id)
     hash.key(hash.values.max)
   end
 
   def worst_season(team_id)
-    hash = team_percentage_wins_all_seasons(team_id)
+    hash = @game_teams.team_percentage_wins_all_seasons(team_id)
     hash.key(hash.values.min)
   end
-
-  # average win percentage 
 
   def most_goals_scored(team_id)
     goals_scored = @games.away_goals_high + @games.home_goals_high

@@ -184,26 +184,6 @@ RSpec.describe StatTracker do
       end
     end
 
-    describe 'best and worst season helper methods' do
-      it 'has win_totals_by_season which returns a hash of team_ids => number of wins' do
-        expect(@stat_tracker.win_totals_by_season('20122013')).to eq({'3'=>0, '6'=>9, '5'=>0})
-      end
-
-      it 'has total_games_played_by_season which returns a hash of team_ids => total games played' do
-        expect(@stat_tracker.total_games_played_by_season('20122013')).to eq({'3'=>5, '6'=>9, '5'=>4})
-      end
-
-      it 'has team_percentage_wins_by_season which takes a team_id and season_id and returns a percentage' do
-        expect(@stat_tracker.team_percentage_wins_by_season('3', '20122013')).to eq 0.0
-        expect(@stat_tracker.team_percentage_wins_by_season('6', '20122013')).to eq 1.0
-      end
-
-      it 'has team_percentage_wins_all_seasons which takes a team_id and returns a hash of season_ids => win percentage' do
-        expect(@stat_tracker.team_percentage_wins_all_seasons('3')).to eq({'20122013'=>0.0, '20172018'=>0.0})
-        expect(@stat_tracker.team_percentage_wins_all_seasons('6')).to eq({'20122013'=>1.0, '20172018'=>0.4})
-      end
-    end
-
     describe '#best_season' do
       it 'takes a team_id and returns the season_id with highest win percentage' do
         expect(@stat_tracker.best_season('6')).to eq '20122013'
