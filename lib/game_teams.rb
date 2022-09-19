@@ -1,5 +1,5 @@
 require 'csv'
-require './lib/season'
+require_relative './season'
 
 class GameTeams 
   def initialize(game_teams_data, games_data)

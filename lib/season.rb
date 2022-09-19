@@ -1,4 +1,4 @@
-require './lib/games'
+require_relative './games'
 
 class Season < Games 
   def initialize(games_data, season)

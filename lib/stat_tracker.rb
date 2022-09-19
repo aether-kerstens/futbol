@@ -1,5 +1,8 @@
 require 'csv'
-require './lib/games'
+require_relative './games'
+require_relative './teams'
+require_relative './game_teams'
+require_relative './season'
 
 class StatTracker
   attr_reader :games_data, :teams_data, :game_teams_data
@@ -126,10 +129,23 @@ class StatTracker
   #most accurate team
 
   #least accurate team
+  def most_tackles(season)
+    season_games = @game_teams.data_by_season(season)
+    tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
+    end
+    id = tackles_by_team.key(tackles_by_team.values.max)
+    @teams.get_team_name(id)
+  end
 
-  #most tackles
-
-  #fewest tackles
+  def fewest_tackles(season)
+    season_games = @game_teams.data_by_season(season)
+    tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
+    end
+    id = tackles_by_team.key(tackles_by_team.values.min)
+    @teams.get_team_name(id)
+  end
 
   ################### END OF SEASON METHODS ##################
 
