@@ -64,20 +64,6 @@ RSpec.describe Games do
   end
 
   describe 'lowest scoring visitor helper methods' do 
-    #add to teams spec
-    # it 'returns a list of team_ids and associated names' do 
-    #   expect(@games.team_id_to_name).to eq(
-    #     [{"1"=>"Atlanta United"},
-    #     {"4"=>"Chicago Fire"},
-    #     {"26"=>"FC Cincinnati"},
-    #     {"14"=>"DC United"},
-    #     {"6"=>"FC Dallas"},
-    #     {"3"=>"Houston Dynamo"},
-    #     {"5"=>"Sporting Kansas City"},
-    #     {"17"=>"LA Galaxy"},
-    #     {"28"=>"Los Angeles FC"}]
-    #   )
-    # end
 
     it 'returns the lowest scoring teams team_id' do 
       expect(@games.low_ave_score_away).to eq(["5"])
