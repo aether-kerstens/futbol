@@ -12,4 +12,8 @@ class Teams
     end
   end
 
+  def get_team_name(team_id)
+    team = @teams_data.find { |row| row["team_id"] == team_id }
+    team["teamName"]
+  end
 end

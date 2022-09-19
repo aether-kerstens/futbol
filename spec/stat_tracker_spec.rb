@@ -282,9 +282,7 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.all_opponents_win_percentages('6')).to eq({'3'=>0.00, '5'=>0.00, '14'=>0.40})
       end
 
-      it 'has get_team_name which takes a team_id and returns string of team name' do
-        expect(@stat_tracker.get_team_name('3')).to eq 'Houston Dynamo'
-      end
+
     end
 
     describe '#favorite_opponent' do

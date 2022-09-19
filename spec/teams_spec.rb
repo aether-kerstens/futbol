@@ -18,7 +18,7 @@ RSpec.describe Teams do
 
   describe 'helper method for lowest scoring visitor' do 
     it 'returns a list of team_ids and associated names' do 
-      expect(@games.team_id_to_name).to eq(
+      expect(@teams.team_id_to_name).to eq(
         [{"1"=>"Atlanta United"},
         {"4"=>"Chicago Fire"},
         {"26"=>"FC Cincinnati"},
@@ -29,6 +29,12 @@ RSpec.describe Teams do
         {"17"=>"LA Galaxy"},
         {"28"=>"Los Angeles FC"}]
       )
+    end
+  end
+
+  describe 'helper method that takes a team_id and returns a string of a name' do 
+    it 'has get_team_name which takes a team_id and returns string of team name' do
+      expect(@teams.get_team_name('3')).to eq 'Houston Dynamo'
     end
   end
 

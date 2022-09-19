@@ -9,6 +9,8 @@ class StatTracker
     @teams_data = teams_data
     @game_teams_data = game_teams_data
     @games = Games.new(games_data)
+    @teams = Teams.new(teams_data)
+    @game_teams = GameTeams.new(game_teams_data)
   end
 
   def self.from_csv(locations)
@@ -64,18 +66,20 @@ class StatTracker
 
 ############# START OF LEAGUE METHODS #############
 
-  # def count_of_teams
-  #   @teams_data.map { |row| row["teamName"] }.uniq.count
-  #   # teams_total = Hash.new(0)
-  #   # @teams_data.map do |row|
-  #   #   teams_total[row["teamName"].length]
-  # end
 
-  # def best_offense
-  # end
+  def best_offense
+    team_id = @game_teams.average_goals_by_team.key(@game_teams.average_goals_by_team.values.max)
+    @teams.get_team_name(team_id)
+  end
 
-  # def worst_offense
-  # end 
+  def worst_offense
+    team_id = @game_teams.average_goals_by_team.key(@game_teams.average_goals_by_team.values.min)
+    @teams.get_team_name(team_id)
+  end
+
+  def count_of_teams
+    @teams_data.map { |row| row["teamName"] }.uniq.count
+  end
 
   def highest_scoring_visitor
     @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_away[0]}}.values[0] 
@@ -150,12 +154,12 @@ class StatTracker
 
   def most_accurate_team(season_id)
     hash = team_accuracy_by_season(season_id)
-    get_team_name(hash.key(hash.values.max))
+    @teams.get_team_name(hash.key(hash.values.max))
   end
 
   def least_accurate_team(season_id)
     hash = team_accuracy_by_season(season_id)
-    get_team_name(hash.key(hash.values.min))
+    @teams.get_team_name(hash.key(hash.values.min))
   end
 
   def team_info(team_id)
@@ -199,7 +203,7 @@ class StatTracker
   def average_win_percentage(team_id)
     data = @game_teams_data.select{|row| row["team_id"] == team_id}
     total_wins = data.count{|row| row["result"] == "WIN"}
-    total_games = count_of_games_by_team[team_id]
+    total_games = @game_teams.count_of_games_by_team[team_id]
     (total_wins / total_games.to_f).round(2)
   end
 
@@ -214,48 +218,6 @@ class StatTracker
   end
 
   # average win percentage 
-
-  def count_of_teams
-    @teams_data.map { |row| row["teamName"] }.uniq.count
-  end
-
-  def count_of_games_by_team
-    games_by_team = Hash.new(0)
-    @game_teams_data.each do |row|
-      games_by_team[row["team_id"]] += 1
-    end
-    games_by_team
-  end
-
-  def count_of_goals_by_team
-    goals_by_team = Hash.new(0)
-    @game_teams_data.each do |row|
-      goals_by_team[row["team_id"]] += row["goals"].to_i
-    end
-    goals_by_team
-  end
-
-  def get_teams
-    @teams_data.map {|row| row["team_id"]}.uniq
-  end
-
-  def average_goals_by_team
-    average_goals = Hash.new(0)
-    count_of_goals_by_team.each do |team_id, goals|
-      average_goals[team_id] = count_of_goals_by_team[team_id] / count_of_games_by_team[team_id].to_f
-    end
-    average_goals
-  end
-
-  def best_offense
-    team_id = average_goals_by_team.key(average_goals_by_team.values.max)
-    get_team_name(team_id)
-  end
-
-  def worst_offense
-    team_id = average_goals_by_team.key(average_goals_by_team.values.min)
-    get_team_name(team_id)
-  end
 
   def most_goals_scored(team_id)
     goals_scored = @games.away_goals_high + @games.home_goals_high
@@ -314,18 +276,15 @@ class StatTracker
   end
 
 #UNCATEGORIZED HELPER METHOD#
-  def get_team_name(team_id)
-    team = @teams_data.find { |row| row["team_id"] == team_id }
-    team["teamName"]
-  end
+
 
   def favorite_opponent(team_id)
     hash = all_opponents_win_percentages(team_id)
-    get_team_name(hash.key(hash.values.min))
+    @teams.get_team_name(hash.key(hash.values.min))
   end
 
   def rival(team_id)
     hash = all_opponents_win_percentages(team_id)
-    get_team_name(hash.key(hash.values.max))
+    @teams.get_team_name(hash.key(hash.values.max))
   end
 end
