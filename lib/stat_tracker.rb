@@ -303,18 +303,18 @@ class StatTracker
 
   #/////Work in progress////
   def most_tackles(season)
-    season_games = games_by_season(season)
-    tackles_by_team = get_team_ids.each_with_object({}) do |id, hash|
-      hash[id] = @game_teams_data.reject {|row| row["team_id"] != id && !season_games.include?(row["game_id"])}.map {|row| row["tackles"].to_i}.sum
+    season_games = data_by_season(season)
+    tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
     end
     id = tackles_by_team.key(tackles_by_team.values.max)
     get_team_name(id)
   end
 
   def fewest_tackles(season)
-    season_games = games_by_season(season)
-    tackles_by_team = get_team_ids.each_with_object({}) do |id, hash|
-      hash[id] = @game_teams_data.reject {|row| row["team_id"] != id && !season_games.include?(row["game_id"])}.map {|row| row["tackles"].to_i}.sum
+    season_games = data_by_season(season)
+    tackles_by_team = season_games.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["team_id"]] += row["tackles"].to_i
     end
     id = tackles_by_team.key(tackles_by_team.values.min)
     get_team_name(id)
