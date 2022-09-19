@@ -8,9 +8,6 @@ class StatTracker
   attr_reader :games_data, :teams_data, :game_teams_data
 
   def initialize(games_data, teams_data, game_teams_data)
-    @games_data = games_data
-    @teams_data = teams_data
-    @game_teams_data = game_teams_data
     @games = Games.new(games_data)
     @teams = Teams.new(teams_data)
     @game_teams = GameTeams.new(game_teams_data, games_data)
@@ -27,11 +24,11 @@ class StatTracker
   end
 
   def highest_total_score
-    @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
+    @games.highest_total_score
   end
 
   def lowest_total_score
-    @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.min
+    @games.lowest_total_score
   end
 
   def percentage_home_wins
@@ -47,9 +44,7 @@ class StatTracker
   end
 
   def count_of_games_by_season
-    @games_data.each_with_object(Hash.new(0)) do |row, hash|
-      hash[row["season"]] += 1
-    end
+    @games.count_of_games_by_season
   end
 
   def average_goals_per_game
