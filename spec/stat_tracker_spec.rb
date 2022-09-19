@@ -50,23 +50,6 @@ RSpec.describe StatTracker do
       end
     end
 
-    describe 'percentage wins and ties helper methods' do
-      it 'has a total_home_wins which calculates total number of home wins' do
-        expect(@stat_tracker.total_home_wins).to eq 8
-      end
-
-      it 'has a total_away_wins which calculates total number of away wins' do
-        expect(@stat_tracker.total_away_wins).to eq 6
-      end
-
-      it 'has a total_ties which calculates total numeber of ties' do
-        expect(@stat_tracker.total_ties).to eq 1
-      end
-
-      it 'has a total_games which counts the total number of games' do
-        expect(@stat_tracker.total_games).to eq 15
-      end
-    end
 
     describe '#percentage_home_wins' do
       it 'returns a float rounded to nearest 100th of percentage home wins' do
@@ -100,15 +83,15 @@ RSpec.describe StatTracker do
 
     describe '#average_goals_by_season' do
       it 'returns a hash of season => average goals' do
-        expect(@stat_tracker.average_goals_by_season).to eq ({'20122013' => 3.78, '20172018'=>4.17})
+        expect(@stat_tracker.average_goals_by_season).to eq ({"20122013" => 3.78, "20172018" =>4.17})
       end
     end
   end
 
   context 'league statistics' do
-    describe '#count_of_teams' do
-      #test goes here
-    end
+    # describe '#count_of_teams' do
+    #   #test goes here
+    # end
 
     describe '#best_offense' do
       it 'returns a string of team with best offense' do
@@ -127,16 +110,6 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.highest_scoring_visitor).to eq('FC Dallas')
       end
 
-      it 'writes tests for highest scoring visitor #high_ave_score_team helper method' do
-        expect(@stat_tracker.high_ave_score_team).to eq(["6"])
-
-      end
-
-      it 'writes tests for highest scoring visitor #low_ave_score_hometeam helper method' do
-        expect(@stat_tracker.low_ave_score_hometeam).to eq(["5"])
-
-      end
-
 
     end
 
@@ -150,28 +123,8 @@ RSpec.describe StatTracker do
       it 'returns name of team with lowest avg score per game' do
         expect(@stat_tracker.lowest_scoring_visitor).to eq('Sporting Kansas City')
       end
-      it 'returns a list of team_ids and associated names' do
-        expect(@stat_tracker.team_id_to_name).to eq(
-          [{"1"=>"Atlanta United"},
-          {"4"=>"Chicago Fire"},
-          {"26"=>"FC Cincinnati"},
-          {"14"=>"DC United"},
-          {"6"=>"FC Dallas"},
-          {"3"=>"Houston Dynamo"},
-          {"5"=>"Sporting Kansas City"},
-          {"17"=>"LA Galaxy"},
-          {"28"=>"Los Angeles FC"}]
-        )
-      end
 
-      it 'returns the lowest scoring teams team_id' do
-        expect(@stat_tracker.low_ave_score_team).to eq(["5"])
-      end
-
-      it 'finds each team_ids average for scores for all games when away' do
-        expect(@stat_tracker.low_ave_score_away).to eq([{"3"=>1.25}, {"6"=>2.7142857142857144}, {"5"=>0.5}, {"14"=>2.0}])
-      end
-    end
+    end 
 
     describe '#lowest_scoring_home_team' do
       it 'returns name of team with lowest average score while at home' do
@@ -182,17 +135,6 @@ RSpec.describe StatTracker do
 
   context 'season statistics' do
     describe 'winningest and worst coaches helper methods' do
-      it 'has games_by_season which returns an array of games_ids' do
-        expect(@stat_tracker.games_by_season('20122013')).to eq ['2012030221', '2012030222', '2012030223', '2012030224', '2012030225', '2012030311', '2012030312', '2012030313', '2012030314']
-      end
-
-      it 'has data_by_season which returns an array of game_teams_data rows' do
-        expect(@stat_tracker.data_by_season('20122013')).to be_an Array
-        coaches = @stat_tracker.data_by_season('20122013').map { |row| row['head_coach'] }
-        expect(coaches).to eq ['John Tortorella', 'Claude Julien', 'John Tortorella', 'Claude Julien', 'Claude Julien', 'John Tortorella',
-                               'Claude Julien', 'John Tortorella', 'John Tortorella', 'Claude Julien', 'Claude Julien', 'Dan Bylsma',
-                               'Claude Julien', 'Dan Bylsma', 'Dan Bylsma', 'Claude Julien', 'Dan Bylsma', 'Claude Julien']
-      end
 
       it 'has wins_by_coach which returns hash with coach key and no. wins value' do
         expect(@stat_tracker.wins_by_coach('20122013')).to be_a Hash
@@ -242,6 +184,7 @@ RSpec.describe StatTracker do
     describe '#fewest_tackles' do
       it 'returns the name of team with fewest tackles by season' do
         expect(@stat_tracker.fewest_tackles('20122013')).to eq 'Sporting Kansas City'
+      end
     end
   end
 
@@ -259,10 +202,6 @@ RSpec.describe StatTracker do
     end
 
     describe 'best and worst season helper methods' do
-      it 'has a season_ids method which returns an array of all season_ids' do
-        expect(@stat_tracker.season_ids).to eq ['20122013', '20172018']
-      end
-
       it 'has win_totals_by_season which returns a hash of team_ids => number of wins' do
         expect(@stat_tracker.win_totals_by_season('20122013')).to eq({'3'=>0, '6'=>9, '5'=>0})
       end
@@ -304,16 +243,6 @@ RSpec.describe StatTracker do
       it 'has most_goals_scored method for highest number of goals for a particular team in a single game' do
         expect(@stat_tracker.most_goals_scored('6')).to eq(4)
       end
-
-      it 'finds highest number of goals for each team_id to help most_goals_scored when away' do
-        expect(@stat_tracker.away_goals_high).to eq([{"3"=>2}, {"6"=>4}, {"5"=>1}, {"14"=>2}])
-
-      end
-
-      it 'finds lowest number of goals for each team_id to help fewest goals scored when away' do
-        expect(@stat_tracker.away_goals_low).to eq([{"3"=>0}, {"6"=>1}, {"5"=>0}, {"14"=>2}])
-
-      end
     end
 
     describe '#fewest_goals_scored' do
@@ -321,22 +250,9 @@ RSpec.describe StatTracker do
         # require 'pry'; binding.pry
         expect(@stat_tracker.fewest_goals_scored('6')).to eq(1)
       end
-
-      it 'finds highest number of goals for each team_id to help most_goals_scored when home' do
-        expect(@stat_tracker.home_goals_high).to eq([{"6"=>3}, {"3"=>2}, {"5"=>1}, {"14"=>3}, {"4"=>3}])
-
-      end
-
-      it 'finds lowest number of goals for each team_id to help most_goals_scored when home' do
-        expect(@stat_tracker.home_goals_low).to eq([{"6"=>1}, {"3"=>1}, {"5"=>0}, {"14"=>2}, {"4"=>3}])
-
-      end
     end
 
     describe 'rival and favorite opponent helper methods' do
-      it 'has a game_ids_by_team method which returns an array of games played by the team' do
-        expect(@stat_tracker.game_ids_by_team('3')).to eq ['2012030221', '2012030222', '2012030223', '2012030224', '2012030225', '2017021257']
-      end
 
       it 'has an opponents_data which filters the games_teams_data by opponents of a given team' do
         expect(@stat_tracker.opponents_data('3')).to be_an Array
@@ -360,9 +276,7 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.all_opponents_win_percentages('6')).to eq({'3'=>0.00, '5'=>0.00, '14'=>0.40})
       end
 
-      it 'has get_team_name which takes a team_id and returns string of team name' do
-        expect(@stat_tracker.get_team_name('3')).to eq 'Houston Dynamo'
-      end
+
     end
 
     describe '#favorite_opponent' do
@@ -376,6 +290,5 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.rival('6')).to eq 'DC United'
       end
     end
-  end
   end
 end
