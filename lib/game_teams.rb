@@ -88,11 +88,10 @@ class GameTeams
     end
   end
 
-  #UNCATEGORIZED HELPER METHOD# 
   def opponents_data(team_id)
     games = Games.new(@games_data).game_ids_by_team(team_id)
-    @game_teams_data.each_with_object([]) do |row, array|
-      array << row if games.include?(row["game_id"]) && row["team_id"] != team_id 
+    @game_teams_data.select do |row|
+      games.include?(row["game_id"]) && row["team_id"] != team_id 
     end
   end
 

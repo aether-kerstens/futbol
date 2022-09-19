@@ -64,10 +64,7 @@ class StatTracker
     averages
   end
 ############# END OF GAMES METHODS ################
-
 ############# START OF LEAGUE METHODS #############
-
-
   def best_offense
     team_id = @game_teams.average_goals_by_team.key(@game_teams.average_goals_by_team.values.max)
     @teams.get_team_name(team_id)
@@ -97,9 +94,7 @@ class StatTracker
   def lowest_scoring_home_team
     @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_hometeam[0]}}.values[0] 
   end
-
   ################ END OF LEAGUE METHODS ##############
-
   ############### START OF SEASON METHODS ##############
   def winningest_coach(season)
     hash = @game_teams.wins_by_coach(season)
@@ -130,11 +125,8 @@ class StatTracker
     id = @game_teams.tackles_by_team(season).key(@game_teams.tackles_by_team(season).values.min)
     @teams.get_team_name(id)
   end
-
   ################### END OF SEASON METHODS ##################
-
   #################### START OF TEAMS METHODS #################
-
   def team_info(team_id)
     teams_hash = teams_data.group_by {|row| row}.map {|key, value| Hash[key]}.find {|team| team["team_id"] == team_id}
     teams_hash.delete("Stadium")
