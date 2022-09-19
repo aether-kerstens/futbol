@@ -258,6 +258,12 @@ class StatTracker
     opponents_data(team_id).map { |row| row["team_id"] }.uniq
   end
 
+
+#helper methods that multiple classes are using: modules
+#create a class method on game (all) game.all would return an array on
+#make game objects
+
+
 #UNCATEGORIZED HELPER METHOD#  
   def all_opponents_win_percentages(team_id)
     opponents_ids(team_id).each_with_object(Hash.new(0)) do |opponent_id, hash|
