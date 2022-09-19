@@ -78,27 +78,21 @@ class StatTracker
   # end 
 
   def highest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_away[0]}}.values[0] 
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_away[0]}}.values[0] 
   end
 
   def highest_scoring_home_team
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_hometeam[0]}}.values[0] 
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_hometeam[0]}}.values[0] 
   end
 
   def lowest_scoring_visitor
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_away[0]}}.values[0]
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_away[0]}}.values[0]
   end
 
   def lowest_scoring_home_team
-    team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_hometeam[0]}}.values[0] 
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_hometeam[0]}}.values[0] 
   end
 
-#UNCATEGORIZED HELPER METHOD#
-  def team_id_to_name
-    @teams_data.map do |row|
-      {row["team_id"] => row["teamName"]}
-    end
-  end
   ################ END OF LEAGUE METHODS ##############
 
   ############### START OF SEASON METHODS ##############
