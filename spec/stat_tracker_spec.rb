@@ -135,13 +135,6 @@ RSpec.describe StatTracker do
 
   context 'season statistics' do
     describe 'winningest and worst coaches helper methods' do
-      it 'has data_by_season which returns an array of game_teams_data rows' do
-        expect(@stat_tracker.data_by_season('20122013')).to be_an Array
-        coaches = @stat_tracker.data_by_season('20122013').map { |row| row['head_coach'] }
-        expect(coaches).to eq ['John Tortorella', 'Claude Julien', 'John Tortorella', 'Claude Julien', 'Claude Julien', 'John Tortorella',
-                               'Claude Julien', 'John Tortorella', 'John Tortorella', 'Claude Julien', 'Claude Julien', 'Dan Bylsma',
-                               'Claude Julien', 'Dan Bylsma', 'Dan Bylsma', 'Claude Julien', 'Dan Bylsma', 'Claude Julien']
-      end
 
       it 'has wins_by_coach which returns hash with coach key and no. wins value' do
         expect(@stat_tracker.wins_by_coach('20122013')).to be_a Hash

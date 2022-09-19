@@ -10,7 +10,7 @@ class StatTracker
     @game_teams_data = game_teams_data
     @games = Games.new(games_data)
     @teams = Teams.new(teams_data)
-    @game_teams = GameTeams.new(game_teams_data)
+    @game_teams = GameTeams.new(game_teams_data, games_data)
   end
 
   def self.from_csv(locations)
@@ -101,18 +101,11 @@ class StatTracker
 
   ############### START OF SEASON METHODS ##############
 
-#UNCATEGORIZED HELPER METHOD#
-  def data_by_season(season_id)
-    season = Season.new(games_data, season_id)
-    games = season.list_of_game_ids
-    @game_teams_data.each_with_object([]) do |row, array|
-      array << row if games.include?(row["game_id"])
-    end
-  end
+
 
 #UNCATEGORIZED HELPER METHOD#
   def wins_by_coach(season_id)
-    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+    @game_teams.data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
       row["result"] == "WIN" ? hash[row["head_coach"]] += 1 : hash[row["head_coach"]] += 0
     end
   end
@@ -145,7 +138,7 @@ class StatTracker
 #Start of helper methods for most accurate team and least accurate team
   def team_accuracy_by_season(season_id)
     hash = Hash.new{|h,k| h[k] = {goals: 0, shots: 0}}
-    data_by_season(season_id).each do |row|
+    @game_teams.data_by_season(season_id).each do |row|
       hash[row["team_id"]][:goals] += row["goals"].to_i
       hash[row["team_id"]][:shots] += row["shots"].to_i
     end
@@ -173,7 +166,7 @@ class StatTracker
 
 #UNCATEGORIZED HELPER METHOD#
   def win_totals_by_season(season_id)
-    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+    @game_teams.data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
       if row["result"] == "WIN"
         hash[row["team_id"]] += 1
       else
@@ -184,7 +177,7 @@ class StatTracker
 
 #UNCATEGORIZED HELPER METHOD#
   def total_games_played_by_season(season_id)
-    data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
+    @game_teams.data_by_season(season_id).each_with_object(Hash.new(0)) do |row, hash|
       hash[row["team_id"]] += 1
     end
   end

@@ -2,8 +2,9 @@ require 'csv'
 require './lib/season'
 
 class GameTeams 
-  def initialize(game_teams_data)
+  def initialize(game_teams_data, games_data)
     @game_teams_data = game_teams_data
+    @games_data = games_data
   end
 
   def count_of_games_by_team
@@ -31,12 +32,14 @@ class GameTeams
   end
 
   def data_by_season(season_id)
-    season = Season.new(games_data, season_id)
+    season = Season.new(@games_data, season_id)
     games = season.list_of_game_ids
     @game_teams_data.each_with_object([]) do |row, array|
       array << row if games.include?(row["game_id"])
     end
   end
+
+  
 
   
 
