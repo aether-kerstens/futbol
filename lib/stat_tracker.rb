@@ -2,8 +2,10 @@ require_relative './games'
 require_relative './teams'
 require_relative './game_teams'
 require_relative './min_and_maxable'
+
 class StatTracker
   include MinAndMaxable
+
   def initialize(games_data, teams_data, game_teams_data)
     @games = Games.new(games_data)
     @teams = Teams.new(teams_data)
@@ -93,13 +95,11 @@ class StatTracker
   end
 
   def most_accurate_team(season)
-    hash = @game_teams.team_accuracy_by_season(season)
-    @teams.get_team_name(hash.key(hash.values.max))
+    @teams.get_team_name(key_at_max(@game_teams.team_accuracy_by_season(season)))
   end
 
   def least_accurate_team(season)
-    hash = @game_teams.team_accuracy_by_season(season)
-    @teams.get_team_name(hash.key(hash.values.min))
+    @teams.get_team_name(key_at_min(@game_teams.team_accuracy_by_season(season)))
   end
 
   def most_tackles(season)
