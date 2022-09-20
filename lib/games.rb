@@ -98,6 +98,20 @@ class Games
       array << row["game_id"] if row["away_team_id"] == team_id || row["home_team_id"] == team_id
     end
   end
+
+  def count_of_games_by_season
+    @games_data.each_with_object(Hash.new(0)) do |row, hash|
+      hash[row["season"]] += 1
+    end
+  end
+
+  def highest_total_score
+    @games_data.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.max
+  end
+
+  def lowest_total_score
+    @games_data.map {|row| (row["away_goals"].to_i + row["home_goals"].to_i)}.min
+  end
 end
 
 

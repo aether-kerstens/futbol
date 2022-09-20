@@ -38,7 +38,17 @@ RSpec.describe Teams do
     end
   end
 
-
+  describe '#team_info' do
+      it 'gives team_info in a hash with input of team_id' do
+        # require 'pry'; binding.pry
+        expect(@teams.team_info('1')).to eq({
+          'team_id'  => '1',
+          'franchise_id' => '23',
+          'team_name' => 'Atlanta United',
+          'abbreviation' => 'ATL',
+          'link' => '/api/v1/teams/1'})
+      end
+    end
 
 
 
