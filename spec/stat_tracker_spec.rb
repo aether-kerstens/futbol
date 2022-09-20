@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
-require './lib/stat_tracker.rb'
-require 'csv'
+# require './lib/stat_tracker.rb'
+# require 'csv'
 
 RSpec.describe StatTracker do
   before(:each) do
@@ -124,7 +124,7 @@ RSpec.describe StatTracker do
         expect(@stat_tracker.lowest_scoring_visitor).to eq('Sporting Kansas City')
       end
 
-    end 
+    end
 
     describe '#lowest_scoring_home_team' do
       it 'returns name of team with lowest average score while at home' do

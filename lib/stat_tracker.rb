@@ -1,7 +1,4 @@
-require 'csv'
-require_relative './games'
-require_relative './teams'
-require_relative './game_teams'
+require './spec/spec_helper'
 
 class StatTracker
   attr_reader :games_data, :teams_data, :game_teams_data
@@ -55,8 +52,7 @@ class StatTracker
       hash[season] = (@games.total_goals_by_season(season) / @games.total_games_by_season(season).to_f).round(2)
     end
   end
-############# END OF GAMES METHODS ################
-############# START OF LEAGUE METHODS #############
+
   def best_offense
     team_id = @game_teams.average_goals_by_team.key(@game_teams.average_goals_by_team.values.max)
     @teams.get_team_name(team_id)
@@ -72,11 +68,11 @@ class StatTracker
   end
 
   def highest_scoring_visitor
-    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_away[0]}}.values[0] 
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_away[0]}}.values[0]
   end
 
   def highest_scoring_home_team
-    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_hometeam[0]}}.values[0] 
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.high_ave_score_hometeam[0]}}.values[0]
   end
 
   def lowest_scoring_visitor
@@ -84,10 +80,9 @@ class StatTracker
   end
 
   def lowest_scoring_home_team
-    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_hometeam[0]}}.values[0] 
+    @teams.team_id_to_name.find {|pairs| pairs.find {|key, value| key == @games.low_ave_score_hometeam[0]}}.values[0]
   end
-  ################ END OF LEAGUE METHODS ##############
-  ############### START OF SEASON METHODS ##############
+
   def winningest_coach(season)
     hash = @game_teams.wins_by_coach(season)
     hash.key(hash.values.max)
@@ -117,8 +112,7 @@ class StatTracker
     id = @game_teams.tackles_by_team(season).key(@game_teams.tackles_by_team(season).values.min)
     @teams.get_team_name(id)
   end
-  ################### END OF SEASON METHODS ##################
-  #################### START OF TEAMS METHODS #################
+
   def team_info(team_id)
     @teams.team_info(team_id)
   end
@@ -146,9 +140,6 @@ class StatTracker
     goals_scored_few = @games.away_goals_low + @games.home_goals_low
     goals_scored_few.map {|team_scores| team_scores[team_id]}.compact.min
   end
-#helper methods that multiple classes are using: modules
-#create a class method on game (all) game.all would return an array on
-#make game objects
 
   def favorite_opponent(team_id)
     hash = @game_teams.all_opponents_win_percentages(team_id)
