@@ -2,7 +2,8 @@ require 'csv'
 require_relative './season'
 require_relative './games'
 
-class GameTeams 
+
+class GameTeams
   def initialize(game_teams_data, games_data)
     @game_teams_data = game_teams_data
     @games_data = games_data
@@ -77,7 +78,7 @@ class GameTeams
       hash[row["team_id"]] += 1
     end
   end
- 
+
   def team_percentage_wins_by_season(team_id, season)
     (win_totals_by_season(season)[team_id] / total_games_played_by_season(season)[team_id].to_f).round(3)
   end
@@ -92,7 +93,7 @@ class GameTeams
   def opponents_data(team_id)
     games = Games.new(@games_data).game_ids_by_team(team_id)
     @game_teams_data.select do |row|
-      games.include?(row["game_id"]) && row["team_id"] != team_id 
+      games.include?(row["game_id"]) && row["team_id"] != team_id
     end
   end
 
@@ -124,7 +125,7 @@ class GameTeams
 
   def data_by_team(team_id)
     @game_teams_data.select{|row| row["team_id"] == team_id}
-  end 
+  end
 
   def team_total_wins(team_id)
     data_by_team(team_id).count{|row| row["result"] == "WIN"}
