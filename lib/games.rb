@@ -64,9 +64,9 @@ class Games
   end
 
   def home_goals_high
-      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.max}
-      end
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["home_goals"].to_i}.max}
+    end
   end
 
   def away_goals_low

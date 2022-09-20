@@ -139,12 +139,10 @@ class StatTracker
   end
 
   def favorite_opponent(team_id)
-    hash = @game_teams.all_opponents_win_percentages(team_id)
-    @teams.get_team_name(hash.key(hash.values.min))
+    @teams.get_team_name(@game_teams.min_opponents_win(team_id))
   end
 
   def rival(team_id)
-    hash = @game_teams.all_opponents_win_percentages(team_id)
-    @teams.get_team_name(hash.key(hash.values.max))
+    @teams.get_team_name(@game_teams.max_opponents_win(team_id))
   end
 end
