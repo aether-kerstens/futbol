@@ -5,6 +5,4 @@ class Season < Games
     super(games_data)
     @games_data = @games_data.select {|row| row["season"] == season}
   end
-
-
 end

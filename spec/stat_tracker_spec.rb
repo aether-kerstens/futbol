@@ -50,7 +50,6 @@ RSpec.describe StatTracker do
       end
     end
 
-
     describe '#percentage_home_wins' do
       it 'returns a float rounded to nearest 100th of percentage home wins' do
         expect(@stat_tracker.percentage_home_wins).to eq 0.53
@@ -89,9 +88,11 @@ RSpec.describe StatTracker do
   end
 
   context 'league statistics' do
-    # describe '#count_of_teams' do
-    #   #test goes here
-    # end
+    describe '#count_of_teams' do
+      it 'returns total number of teams in the data' do
+        expect(@stat_tracker.count_of_teams).to eq(9)
+      end 
+    end
 
     describe '#best_offense' do
       it 'returns a string of team with best offense' do
@@ -109,8 +110,6 @@ RSpec.describe StatTracker do
       it 'highest_scoring_visitor, name of team with highest avg score per game' do
         expect(@stat_tracker.highest_scoring_visitor).to eq('FC Dallas')
       end
-
-
     end
 
     describe 'highest_scoring_home_team' do
@@ -123,7 +122,6 @@ RSpec.describe StatTracker do
       it 'returns name of team with lowest avg score per game' do
         expect(@stat_tracker.lowest_scoring_visitor).to eq('Sporting Kansas City')
       end
-
     end
 
     describe '#lowest_scoring_home_team' do
@@ -174,7 +172,6 @@ RSpec.describe StatTracker do
   context 'team statistics' do
     describe '#team_info' do
       it 'gives team_info in a hash with input of team_id' do
-        # require 'pry'; binding.pry
         expect(@stat_tracker.team_info('1')).to eq({
           'team_id'  => '1',
           'franchise_id' => '23',
@@ -210,7 +207,6 @@ RSpec.describe StatTracker do
 
     describe '#fewest_goals_scored' do
       it 'has fewest_goals_scored method for lowest number of goals for a particular team in a single game' do
-        # require 'pry'; binding.pry
         expect(@stat_tracker.fewest_goals_scored('6')).to eq(1)
       end
     end
