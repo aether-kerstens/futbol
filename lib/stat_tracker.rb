@@ -103,13 +103,11 @@ class StatTracker
   end
 
   def most_tackles(season)
-    id = @game_teams.tackles_by_team(season).key(@game_teams.tackles_by_team(season).values.max)
-    @teams.get_team_name(id)
+    @teams.get_team_name(key_at_max(@game_teams.tackles_by_team(season)))
   end
 
   def fewest_tackles(season)
-    id = @game_teams.tackles_by_team(season).key(@game_teams.tackles_by_team(season).values.min)
-    @teams.get_team_name(id)
+    @teams.get_team_name(key_at_min(@game_teams.tackles_by_team(season)))
   end
 
   def team_info(team_id)
