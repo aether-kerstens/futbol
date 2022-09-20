@@ -1,10 +1,9 @@
 require_relative './games'
 require_relative './teams'
 require_relative './game_teams'
-
+require_relative './min_and_maxable'
 class StatTracker
-  attr_reader :games_data, :teams_data, :game_teams_data
-
+  include MinAndMaxable
   def initialize(games_data, teams_data, game_teams_data)
     @games = Games.new(games_data)
     @teams = Teams.new(teams_data)
@@ -124,13 +123,11 @@ class StatTracker
   end
 
   def best_season(team_id)
-    hash = @game_teams.team_percentage_wins_all_seasons(team_id)
-    hash.key(hash.values.max)
+    key_at_max(@game_teams.team_percentage_wins_all_seasons(team_id))
   end
 
   def worst_season(team_id)
-    hash = @game_teams.team_percentage_wins_all_seasons(team_id)
-    hash.key(hash.values.min)
+    key_at_min(@game_teams.team_percentage_wins_all_seasons(team_id))
   end
 
   def most_goals_scored(team_id)

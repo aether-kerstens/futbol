@@ -1,8 +1,8 @@
 require 'csv'
 
-class Games 
+class Games
   def initialize(games_data)
-    @games_data = games_data 
+    @games_data = games_data
   end
 
   def total_home_wins
@@ -59,27 +59,27 @@ class Games
 
   def away_goals_high
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.max} 
-    end 
-  end 
+      {tid => scores.map {|score| score["away_goals"].to_i}.max}
+    end
+  end
 
   def home_goals_high
       @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.max} 
-      end 
-  end 
+        {tid => scores.map {|score| score["home_goals"].to_i}.max}
+      end
+  end
 
   def away_goals_low
     @games_data.group_by {|row| row["away_team_id"]}.map do |tid, scores|
-      {tid => scores.map {|score| score["away_goals"].to_i}.min} 
-    end 
-  end 
+      {tid => scores.map {|score| score["away_goals"].to_i}.min}
+    end
+  end
 
   def home_goals_low
-      @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
-        {tid => scores.map {|score| score["home_goals"].to_i}.min} 
-      end 
-  end 
+    @games_data.group_by {|row| row["home_team_id"]}.map do |tid, scores|
+      {tid => scores.map {|score| score["home_goals"].to_i}.min}
+    end
+  end
 
   def total_goals_by_season(season)
     @games_data.reject {|row| row["season"] != season}.map {|row| row["away_goals"].to_i + row["home_goals"].to_i}.sum
@@ -131,15 +131,15 @@ end
 # @total_score_away = Hash.new(0)
 # @total_score_home = Hash.new(0)
 # @total_away_games = Hash.new(0)
-# @total_home_games = Hash.new(0)  
+# @total_home_games = Hash.new(0)
 #     @away_scores = Hash.new{|key, hash| hash[key] = []}
 #     @home_scores = Hash.new{|key, hash| hash[key] = []}
 
 #     games_data.each do |row|
-#       # @total_score_away[row["away_team_id"]] += row["away_goals"].to_i 
-#       # @total_score_home[row["home_team_id"]] += row["home_goals"].to_i 
+#       # @total_score_away[row["away_team_id"]] += row["away_goals"].to_i
+#       # @total_score_home[row["home_team_id"]] += row["home_goals"].to_i
 #       # @total_home_games[row["home_team_id"]] += 1
-#       # @total_away_games[row["away_team_id"]] += 1 
+#       # @total_away_games[row["away_team_id"]] += 1
 #       @away_scores[row["away_team_id"]] << row["away_goals"]
 #       @home_scores[row["home_team_id"]] << row["home_goals"]
 #     end
@@ -152,5 +152,5 @@ end
 
 #   end
 
- 
+
 # end
