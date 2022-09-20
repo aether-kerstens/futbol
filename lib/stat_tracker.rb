@@ -85,13 +85,11 @@ class StatTracker
   end
 
   def winningest_coach(season)
-    hash = @game_teams.wins_by_coach(season)
-    hash.key(hash.values.max)
+    key_at_max(@game_teams.wins_by_coach(season))
   end
 
   def worst_coach(season)
-    hash = @game_teams.wins_by_coach(season)
-    hash.key(hash.values.min)
+    key_at_min(@game_teams.wins_by_coach(season))
   end
 
   def most_accurate_team(season)
