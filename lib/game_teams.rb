@@ -1,9 +1,10 @@
 require 'csv'
 require_relative './season'
 require_relative './games'
-
+require_relative './min_and_maxable'
 
 class GameTeams
+  include MinAndMaxable
   def initialize(game_teams_data, games_data)
     @game_teams_data = game_teams_data
     @games_data = games_data
@@ -129,5 +130,13 @@ class GameTeams
 
   def team_total_wins(team_id)
     data_by_team(team_id).count{|row| row["result"] == "WIN"}
+  end
+
+  def max_opponents_win(team_id)
+    key_at_max(all_opponents_win_percentages(team_id))
+  end
+
+  def min_opponents_win(team_id)
+    key_at_min(all_opponents_win_percentages(team_id))
   end
 end

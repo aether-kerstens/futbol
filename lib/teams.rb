@@ -1,10 +1,9 @@
 require 'csv'
 
-class Teams 
+class Teams
   def initialize(teams_data)
     @teams_data = teams_data
   end
-
 
   def team_id_to_name
     @teams_data.map do |row|

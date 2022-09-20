@@ -2,8 +2,10 @@ require_relative './games'
 require_relative './teams'
 require_relative './game_teams'
 require_relative './min_and_maxable'
+
 class StatTracker
   include MinAndMaxable
+
   def initialize(games_data, teams_data, game_teams_data)
     @games = Games.new(games_data)
     @teams = Teams.new(teams_data)
@@ -85,33 +87,27 @@ class StatTracker
   end
 
   def winningest_coach(season)
-    hash = @game_teams.wins_by_coach(season)
-    hash.key(hash.values.max)
+    key_at_max(@game_teams.wins_by_coach(season))
   end
 
   def worst_coach(season)
-    hash = @game_teams.wins_by_coach(season)
-    hash.key(hash.values.min)
+    key_at_min(@game_teams.wins_by_coach(season))
   end
 
   def most_accurate_team(season)
-    hash = @game_teams.team_accuracy_by_season(season)
-    @teams.get_team_name(hash.key(hash.values.max))
+    @teams.get_team_name(key_at_max(@game_teams.team_accuracy_by_season(season)))
   end
 
   def least_accurate_team(season)
-    hash = @game_teams.team_accuracy_by_season(season)
-    @teams.get_team_name(hash.key(hash.values.min))
+    @teams.get_team_name(key_at_min(@game_teams.team_accuracy_by_season(season)))
   end
 
   def most_tackles(season)
-    id = @game_teams.tackles_by_team(season).key(@game_teams.tackles_by_team(season).values.max)
-    @teams.get_team_name(id)
+    @teams.get_team_name(key_at_max(@game_teams.tackles_by_team(season)))
   end
 
   def fewest_tackles(season)
-    id = @game_teams.tackles_by_team(season).key(@game_teams.tackles_by_team(season).values.min)
-    @teams.get_team_name(id)
+    @teams.get_team_name(key_at_min(@game_teams.tackles_by_team(season)))
   end
 
   def team_info(team_id)
@@ -141,12 +137,10 @@ class StatTracker
   end
 
   def favorite_opponent(team_id)
-    hash = @game_teams.all_opponents_win_percentages(team_id)
-    @teams.get_team_name(hash.key(hash.values.min))
+    @teams.get_team_name(@game_teams.min_opponents_win(team_id))
   end
 
   def rival(team_id)
-    hash = @game_teams.all_opponents_win_percentages(team_id)
-    @teams.get_team_name(hash.key(hash.values.max))
+    @teams.get_team_name(@game_teams.max_opponents_win(team_id))
   end
 end
