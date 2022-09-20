@@ -2,7 +2,6 @@ require 'csv'
 require_relative './games'
 require_relative './teams'
 require_relative './game_teams'
-require_relative './season'
 
 class StatTracker
   attr_reader :games_data, :teams_data, :game_teams_data
@@ -52,11 +51,9 @@ class StatTracker
   end
 
   def average_goals_by_season
-    averages = {}
-    @games.get_seasons.each do |season|
-      averages[season] = (@games.total_goals_by_season(season) / @games.total_games_by_season(season).to_f).round(2)
+    @games.get_seasons.each_with_object({}) do |season, hash|
+      hash[season] = (@games.total_goals_by_season(season) / @games.total_games_by_season(season).to_f).round(2)
     end
-    averages
   end
 ############# END OF GAMES METHODS ################
 ############# START OF LEAGUE METHODS #############
